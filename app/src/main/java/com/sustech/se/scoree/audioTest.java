@@ -29,7 +29,9 @@ public class audioTest extends AppCompatActivity{
 
         tv=(TextView) findViewById(R.id.data);
 
-        final AudioCapturerInterface ac=new AudioCapturer();
+        Data gData= ((Data)getApplicationContext());
+        final AudioCapturerInterface ac=gData.getAudioCapturer();
+
         //final AudioPlayer ap=new AudioPlayer();
 
         findViewById(R.id.btnStartRecord).setOnClickListener(new View.OnClickListener() {
@@ -43,7 +45,7 @@ public class audioTest extends AppCompatActivity{
                         byte[] data=gData.poll();
                         for(int i=0;i<data.length;i++){
                             if (data!=null)
-                                System.out.printf("%d ",(int)(char)data[i]);
+                                System.out.printf("%d ",(int)data[i]);
                         }
                         System.out.println("\n");
                         //ap.play(getAudioData(),0,getAudioData().length);

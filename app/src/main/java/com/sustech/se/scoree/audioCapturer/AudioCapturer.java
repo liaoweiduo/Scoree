@@ -23,10 +23,11 @@ public class AudioCapturer implements AudioCapturerInterface{
 
     private static final String TAG = "AudioCapturer";
 
-    private static final int DEFAULT_SOURCE = MediaRecorder.AudioSource.MIC;
-    private static final int DEFAULT_SAMPLE_RATE = 44100;   //44100
-    private static final int DEFAULT_CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_STEREO;
-    private static final int DEFAULT_AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT;
+    private int DEFAULT_SOURCE;
+    private int DEFAULT_SAMPLE_RATE;
+    private int DEFAULT_CHANNEL_CONFIG;
+    private int DEFAULT_AUDIO_FORMAT;
+    private boolean isInit=false;
 
     private AudioRecord mAudioRecord;
     private int mMinBufferSize = 0;
@@ -36,6 +37,16 @@ public class AudioCapturer implements AudioCapturerInterface{
     private volatile boolean mIsLoopExit = false;
 
     private OnAudioFrameCapturedListener mAudioFrameCapturedListener;
+
+    @Override
+    public boolean audioCaptuerInit(int SOURCE, int SAMPLE_RATE, int CHANNEL_CONFIG, int AUDIO_FORMAT) {
+        DEFAULT_SOURCE=SOURCE;
+        DEFAULT_SAMPLE_RATE=SAMPLE_RATE;
+        DEFAULT_CHANNEL_CONFIG=CHANNEL_CONFIG;
+        DEFAULT_AUDIO_FORMAT=AUDIO_FORMAT;
+        isInit=true;
+        return true;
+    }
 
     @Override
     public boolean isCaptureStarted() {
@@ -48,9 +59,7 @@ public class AudioCapturer implements AudioCapturerInterface{
 
     @Override
     public boolean startCapture() {
-        /*从Data里读取这几个参数*/
-        return startCapture(DEFAULT_SOURCE, DEFAULT_SAMPLE_RATE, DEFAULT_CHANNEL_CONFIG,
-                DEFAULT_AUDIO_FORMAT);
+        return isInit && startCapture(DEFAULT_SOURCE, DEFAULT_SAMPLE_RATE, DEFAULT_CHANNEL_CONFIG, DEFAULT_AUDIO_FORMAT);
     }
 
     @Override
