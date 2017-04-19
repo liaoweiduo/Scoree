@@ -66,15 +66,6 @@ public class audioTest extends AppCompatActivity{
                 //ap.stopPlayer();
             }
         });
-
-//        timer=new Timer();
-//        timer.schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                byte[] data=((Data)getApplicationContext()).poll();
-//
-//            }
-//        }, 1000, 1000);
     }
 
 
