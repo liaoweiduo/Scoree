@@ -8,6 +8,7 @@ import java.util.Queue;
 
 import com.sustech.se.scoree.audioCapturer.AudioCapturer;
 import com.sustech.se.scoree.audioCapturer.AudioCapturerConfig;
+import com.sustech.se.scoree.audioCapturer.AudioCapturerInterface;
 
 /**
  * Created by liaoweiduo on 08/04/2017.
@@ -16,7 +17,7 @@ import com.sustech.se.scoree.audioCapturer.AudioCapturerConfig;
 public class Data extends Application {
     private Queue<byte[]> dataQueue;
     private AudioCapturerConfig audioCapturerConfig;
-    private AudioCapturer audioCapturer=null;
+    private AudioCapturerInterface audioCapturer=null;
 
     private Queue<byte[]> getDataQueue() {
         return dataQueue;
@@ -66,7 +67,7 @@ public class Data extends Application {
         getAudioCapturerConfig().setAUDIO_FORMAT(AUDIO_FORMAT);
     }
 
-    public AudioCapturer getAudioCapturer(){
+    public AudioCapturerInterface getAudioCapturer(){
         if (audioCapturer==null){
             synchronized (Data.class){
                 if (audioCapturer==null){

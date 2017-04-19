@@ -1,17 +1,14 @@
 package com.sustech.se.scoree;
 
 import android.content.pm.PackageManager;
-import android.nfc.Tag;
-import android.os.Handler;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import java.util.Date;
 import java.util.Timer;
-import java.util.TimerTask;
 
 import com.sustech.se.scoree.audioCapturer.*;
 
@@ -26,6 +23,7 @@ public class audioTest extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio_test);
+
 
         tv=(TextView) findViewById(R.id.data);
 

@@ -147,7 +147,7 @@ public class AudioCapturer implements AudioCapturerInterface{
                     Log.d(TAG , "OK, Captured "+ret+" bytes !");
                 }
 
-                SystemClock.sleep(10);
+//                SystemClock.sleep(10);
             }
         }
     }
