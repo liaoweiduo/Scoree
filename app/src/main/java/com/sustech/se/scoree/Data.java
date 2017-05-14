@@ -5,6 +5,7 @@ import android.media.AudioFormat;
 import android.media.MediaRecorder;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.Semaphore;
 
 import com.sustech.se.scoree.audioCapturer.AudioCapturer;
 import com.sustech.se.scoree.audioCapturer.AudioCapturerConfig;
@@ -16,6 +17,11 @@ import com.sustech.se.scoree.audioCapturer.AudioCapturerInterface;
 
 public class Data extends Application {
     private Queue<byte[]> dataQueue;
+    private Semaphore dataMutex;
+    private Semaphore dataFullBuffers;
+    private Semaphore dataEmptyBuffers;
+    private int buffersMax;
+
     private AudioCapturerConfig audioCapturerConfig;
     private AudioCapturerInterface audioCapturer=null;
 
@@ -29,6 +35,30 @@ public class Data extends Application {
 
     public byte[] poll(){
         return getDataQueue().poll();
+    }
+
+    public void acquireDataMutex() throws InterruptedException {
+        dataMutex.acquire();
+    }
+
+    public void acquireDataFullBuffers() throws InterruptedException {
+        dataFullBuffers.acquire();
+    }
+
+    public void acquireDataEmptyBuffers() throws InterruptedException {
+        dataEmptyBuffers.acquire();
+    }
+
+    public void releaseDataMutex() throws InterruptedException {
+        dataMutex.release();
+    }
+
+    public void releaseDataFullBuffers() throws InterruptedException {
+        dataFullBuffers.release();
+    }
+
+    public void releaseDataEmptyBuffers() throws InterruptedException {
+        dataEmptyBuffers.release();
     }
 
     private AudioCapturerConfig getAudioCapturerConfig() {
@@ -82,7 +112,12 @@ public class Data extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        dataQueue=new LinkedList<>();
+        dataQueue = new LinkedList<>();
+        buffersMax = 1000000; // 1MB
+        dataMutex = new Semaphore(1);
+        dataFullBuffers = new Semaphore(0);
+        dataEmptyBuffers = new Semaphore(buffersMax);
+
         int SOURCE = MediaRecorder.AudioSource.MIC;
         int SAMPLE_RATE = 44100;   //44100
         int CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_STEREO;

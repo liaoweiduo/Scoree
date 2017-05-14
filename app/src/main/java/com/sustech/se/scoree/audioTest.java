@@ -39,7 +39,15 @@ public class audioTest extends AppCompatActivity{
                     @Override
                     public void onAudioFrameCaptured(byte[] audioData) {
                         Data gData= ((Data)getApplicationContext());
-                        gData.offer(audioData);  //符合 less knowledge原则
+                        try {
+                            gData.acquireDataEmptyBuffers();
+                            gData.acquireDataMutex();
+                            gData.offer(audioData);  //符合 less knowledge原则
+                            gData.releaseDataMutex();
+                            gData.releaseDataFullBuffers();
+                        }catch (InterruptedException e){
+                            e.printStackTrace();
+                        }
                         byte[] data=gData.poll();
                         for(int i=0;i<data.length;i++){
                             if (data!=null)
