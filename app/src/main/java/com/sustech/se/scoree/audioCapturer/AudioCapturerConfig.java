@@ -12,12 +12,14 @@ public class AudioCapturerConfig {
     private int SAMPLE_RATE;
     private int CHANNEL_CONFIG;
     private int AUDIO_FORMAT;
+    private int BUFFER_SIZE;
 
-    public AudioCapturerConfig(int SOURCE, int SAMPLE_RATE, int CHANNEL_CONFIG, int AUDIO_FORMAT) {
+    public AudioCapturerConfig(int SOURCE, int SAMPLE_RATE, int CHANNEL_CONFIG, int AUDIO_FORMAT, int BUFFER_SIZE) {
         this.SOURCE = SOURCE;
         this.SAMPLE_RATE = SAMPLE_RATE;
         this.CHANNEL_CONFIG = CHANNEL_CONFIG;
         this.AUDIO_FORMAT = AUDIO_FORMAT;
+        this.BUFFER_SIZE = BUFFER_SIZE;
     }
 
     public int getSOURCE() {
@@ -50,5 +52,13 @@ public class AudioCapturerConfig {
 
     public void setAUDIO_FORMAT(int AUDIO_FORMAT) {
         this.AUDIO_FORMAT = AUDIO_FORMAT;
+    }
+
+    public int getBUFFER_SIZE() {
+        return BUFFER_SIZE;
+    }
+
+    public void setBUFFER_SIZE(int BUFFER_SIZE) {
+        this.BUFFER_SIZE = BUFFER_SIZE;
     }
 }

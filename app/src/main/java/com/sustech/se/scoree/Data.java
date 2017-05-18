@@ -16,24 +16,26 @@ import com.sustech.se.scoree.audioCapturer.AudioCapturerInterface;
  */
 
 public class Data extends Application {
-    private Queue<byte[]> dataQueue;
+    private Queue<short[]> dataQueue;
     private Semaphore dataMutex;
     private Semaphore dataFullBuffers;
     private Semaphore dataEmptyBuffers;
-    private int buffersMax;
 
     private AudioCapturerConfig audioCapturerConfig;
     private AudioCapturerInterface audioCapturer=null;
 
-    private Queue<byte[]> getDataQueue() {
+    private int keyValue;
+
+
+    private Queue<short[]> getDataQueue() {
         return dataQueue;
     }
 
-    public void offer(byte[] data){
+    public void offer(short[] data){
         getDataQueue().offer(data);
     }
 
-    public byte[] poll(){
+    public short[] poll(){
         return getDataQueue().poll();
     }
 
@@ -61,40 +63,11 @@ public class Data extends Application {
         dataEmptyBuffers.release();
     }
 
-    private AudioCapturerConfig getAudioCapturerConfig() {
+    public AudioCapturerConfig getAudioCapturerConfig() {
         return audioCapturerConfig;
     }
-
-    public int getAudioCapturerSource() {
-        return getAudioCapturerConfig().getSOURCE();
-    }
-
-    public void setAudioCapturerSource(int SOURCE) {
-        getAudioCapturerConfig().setSOURCE(SOURCE);
-    }
-
-    public int getAudioCapturerSampleRate() {
-        return getAudioCapturerConfig().getSAMPLE_RATE();
-    }
-
-    public void setAudioCapturerSampleRate(int SAMPLE_RATE) {
-        getAudioCapturerConfig().setSAMPLE_RATE(SAMPLE_RATE);
-    }
-
-    public int getAudioCapturerChannelConfig() {
-        return getAudioCapturerConfig().getCHANNEL_CONFIG();
-    }
-
-    public void setAudioCapturerChannelConfig(int CHANNEL_CONFIG) {
-        getAudioCapturerConfig().setCHANNEL_CONFIG(CHANNEL_CONFIG);
-    }
-
-    public int getAudioCapturerAudioFormat() {
-        return getAudioCapturerConfig().getAUDIO_FORMAT();
-    }
-
-    public void setAudioCapturerAudioFormat(int AUDIO_FORMAT) {
-        getAudioCapturerConfig().setAUDIO_FORMAT(AUDIO_FORMAT);
+    public void setAudioCapturerConfig(AudioCapturerConfig acc){
+        audioCapturerConfig=acc;
     }
 
     public AudioCapturerInterface getAudioCapturer(){
@@ -102,26 +75,35 @@ public class Data extends Application {
             synchronized (Data.class){
                 if (audioCapturer==null){
                     audioCapturer=new AudioCapturer();
-                    audioCapturer.audioCaptuerInit(getAudioCapturerSource(),getAudioCapturerSampleRate(),getAudioCapturerChannelConfig(),getAudioCapturerAudioFormat());
+                    audioCapturer.audioCaptuerInit(audioCapturerConfig);
                 }
             }
         }
         return audioCapturer;
     }
 
+    public int getKeyValue() {
+        return keyValue;
+    }
+
+    public void setKeyValue(int keyValue) {
+        this.keyValue = keyValue;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
         dataQueue = new LinkedList<>();
-        buffersMax = 1000000; // 1MB
+        int buffersMax = 1000000;
         dataMutex = new Semaphore(1);
         dataFullBuffers = new Semaphore(0);
         dataEmptyBuffers = new Semaphore(buffersMax);
 
         int SOURCE = MediaRecorder.AudioSource.MIC;
-        int SAMPLE_RATE = 44100;   //44100
+        int SAMPLE_RATE = 8000;   //44100
         int CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_STEREO;
         int AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT;
-        audioCapturerConfig = new AudioCapturerConfig(SOURCE,SAMPLE_RATE,CHANNEL_CONFIG,AUDIO_FORMAT);
+        int BUFFER_SIZE = 2048;
+        audioCapturerConfig = new AudioCapturerConfig(SOURCE, SAMPLE_RATE, CHANNEL_CONFIG, AUDIO_FORMAT, BUFFER_SIZE);
     }
 }

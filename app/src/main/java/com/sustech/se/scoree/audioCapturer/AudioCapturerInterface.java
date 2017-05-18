@@ -8,13 +8,13 @@ import android.media.MediaRecorder;
  */
 
 public interface AudioCapturerInterface {
-    boolean audioCaptuerInit(int SOURCE, int SAMPLE_RATE, int CHANNEL_CONFIG, int AUDIO_FORMAT);
+    boolean audioCaptuerInit(AudioCapturerConfig acc);
     boolean isCaptureStarted();
     void setOnAudioFrameCapturedListener(OnAudioFrameCapturedListener listener);
     boolean startCapture();
     void stopCapture();
 
     interface OnAudioFrameCapturedListener {
-        void onAudioFrameCaptured(byte[] audioData);
+        void onAudioFrameCaptured(short[] audioData);
     }
 }

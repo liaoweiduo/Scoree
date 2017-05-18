@@ -30,33 +30,32 @@ public class audioTest extends AppCompatActivity{
         Data gData= ((Data)getApplicationContext());
         final AudioCapturerInterface ac=gData.getAudioCapturer();
 
-        //final AudioPlayer ap=new AudioPlayer();
+        ac.setOnAudioFrameCapturedListener(new AudioCapturerInterface.OnAudioFrameCapturedListener() {
+            @Override
+            public void onAudioFrameCaptured(short[] audioData) {
+                Data gData= ((Data)getApplicationContext());
+                try {
+                    gData.acquireDataEmptyBuffers();
+                    gData.acquireDataMutex();
+                    gData.offer(audioData);  //符合 less knowledge原则
+                    gData.releaseDataMutex();
+                    gData.releaseDataFullBuffers();
+                }catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+                short[] data=gData.poll();
+                for(int i=0;i<data.length;i++){
+                    if (data!=null)
+                        System.out.printf("%d ",(int)data[i]);
+                }
+                System.out.println("\n");
+                //ap.play(getAudioData(),0,getAudioData().length);
+            }
+        });
 
         findViewById(R.id.btnStartRecord).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ac.setOnAudioFrameCapturedListener(new AudioCapturerInterface.OnAudioFrameCapturedListener() {
-                    @Override
-                    public void onAudioFrameCaptured(byte[] audioData) {
-                        Data gData= ((Data)getApplicationContext());
-                        try {
-                            gData.acquireDataEmptyBuffers();
-                            gData.acquireDataMutex();
-                            gData.offer(audioData);  //符合 less knowledge原则
-                            gData.releaseDataMutex();
-                            gData.releaseDataFullBuffers();
-                        }catch (InterruptedException e){
-                            e.printStackTrace();
-                        }
-                        byte[] data=gData.poll();
-                        for(int i=0;i<data.length;i++){
-                            if (data!=null)
-                                System.out.printf("%d ",(int)data[i]);
-                        }
-                        System.out.println("\n");
-                        //ap.play(getAudioData(),0,getAudioData().length);
-                    }
-                });
                 int checkPermission=checkCallingOrSelfPermission(PERMISSION_AUDIO);
                 if(checkPermission!= PackageManager.PERMISSION_GRANTED){
                     Log.e("MainActivity","No permission for audio");
