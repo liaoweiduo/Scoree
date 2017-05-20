@@ -58,6 +58,21 @@ public class AudioCapturer implements AudioCapturerInterface {
     }
 
     @Override
+    public short[] read() {
+        short[] buffer = new short[DEFAULT_BUFFER_SIZE];
+        int ret = mAudioRecord.read(buffer, 0, DEFAULT_BUFFER_SIZE);
+        if (ret == AudioRecord.ERROR_INVALID_OPERATION) {
+            Log.e(TAG, "Error ERROR_INVALID_OPERATION");
+            return null;
+        } else if (ret == AudioRecord.ERROR_BAD_VALUE) {
+            Log.e(TAG, "Error ERROR_BAD_VALUE");
+            return null;
+        }
+        Log.d(TAG, "OK, Captured " + ret + " bytes !");
+        return buffer;
+    }
+
+    @Override
     public boolean startCapture() {
         return isInit && startCapture(DEFAULT_SOURCE, DEFAULT_SAMPLE_RATE, DEFAULT_CHANNEL_CONFIG, DEFAULT_AUDIO_FORMAT, DEFAULT_BUFFER_SIZE);
     }
@@ -70,13 +85,14 @@ public class AudioCapturer implements AudioCapturerInterface {
         }
 
         mIsLoopExit = true;
+        /*
         try {
             mCaptureThread.interrupt();
             mCaptureThread.join(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
+        */
         if (mAudioRecord.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING) {
             mAudioRecord.stop();
         }
@@ -112,10 +128,11 @@ public class AudioCapturer implements AudioCapturerInterface {
         mAudioRecord.startRecording();
 
         mIsLoopExit = false;
+        mIsCaptureStarted = true;
+        /*
         mCaptureThread = new Thread(new AudioCaptureRunnable());
         mCaptureThread.start();
-
-        mIsCaptureStarted = true;
+        */
 
         Log.d(TAG, "Start audio capture success !");
 

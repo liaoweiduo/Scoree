@@ -17,14 +17,14 @@ import com.sustech.se.scoree.audioCapturer.AudioCapturerInterface;
 public class Audio2Key_refactor extends AppCompatActivity{
 
     private static final String PERMISSION_AUDIO="android.permission.RECORD_AUDIO";
-    Data gData;
-    Detector detector;
-    Decoder decoder;
-
-    Audio audio;
-    TextView key_view;
-    Button button;
-    public boolean started = false;
+    private Data gData;
+    private AudioCapturerInterface ac;
+    private Detector detector;
+    private Decoder decoder;
+    AudioAsyncTask audio = null;
+    private TextView key_view;
+    private Button button;
+    private boolean started = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,15 +35,14 @@ public class Audio2Key_refactor extends AppCompatActivity{
         decoder= new Decoder(gData.getAudioCapturerConfig().getBUFFER_SIZE(), gData.getAudioCapturerConfig().getSAMPLE_RATE());
 
         key_view=(TextView) findViewById(R.id.key);
-        final AudioCapturerInterface ac=gData.getAudioCapturer();
+        ac=gData.getAudioCapturer();
+        /*
         ac.setOnAudioFrameCapturedListener(new AudioCapturerInterface.OnAudioFrameCapturedListener() {
             @Override
             public void onAudioFrameCaptured(short[] audioData) {
-                audio = new Audio();
-                audio.execute(audioData);
             }
         });
-
+        */
         button = (Button) findViewById(R.id.audioButton);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,13 +53,15 @@ public class Audio2Key_refactor extends AppCompatActivity{
                     button.setText(R.string.start);
                 }
                 else {
-                    started = true;
                     int checkPermission=checkCallingOrSelfPermission(PERMISSION_AUDIO);
                     if(checkPermission!= PackageManager.PERMISSION_GRANTED){
                         Log.e("MainActivity","No permission for audio");
                         return;
                     }
+                    started = true;
                     ac.startCapture();
+                    if (audio == null) audio= new AudioAsyncTask();
+                    audio.execute();
                     button.setText(R.string.stop);
                 }
             }
@@ -68,24 +69,24 @@ public class Audio2Key_refactor extends AppCompatActivity{
     }
 
 
-    public class Audio extends AsyncTask<short[], Integer, Void> {
+    public class AudioAsyncTask extends AsyncTask<Void, Integer, Void> {
 
         @Override
-        protected Void doInBackground(short[]... datas) {
-            short[] data=datas[0];
-            double[] detectResult = detector.detect(data);
-            int key = decoder.decode(detectResult);
-            if (detectResult != null) publishProgress(key);
+        protected Void doInBackground(Void... datas) {
+            while(ac.isCaptureStarted()) {
+                short[] buffer = ac.read();
+                if (buffer == null) return null;
+                double[] detectResult = detector.detect(buffer);
+                int key = decoder.decode(detectResult);
+                if (detectResult != null) publishProgress(key);
+            }
             return null;
         }
-
 
         @Override
         protected void onProgressUpdate(Integer... keys) {
             int key = keys[0];
-            key_view.setText("Key:"+String.valueOf(key));
+            key_view.setText("Key:" + String.valueOf(key));
         }
-
-
     }
 }

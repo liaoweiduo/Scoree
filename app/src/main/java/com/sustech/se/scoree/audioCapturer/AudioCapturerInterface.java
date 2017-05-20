@@ -13,6 +13,7 @@ public interface AudioCapturerInterface {
     void setOnAudioFrameCapturedListener(OnAudioFrameCapturedListener listener);
     boolean startCapture();
     void stopCapture();
+    short[] read();
 
     interface OnAudioFrameCapturedListener {
         void onAudioFrameCaptured(short[] audioData);
