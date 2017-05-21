@@ -29,7 +29,7 @@ public class audioTest extends AppCompatActivity{
 
         Data gData= ((Data)getApplicationContext());
         final AudioCapturerInterface ac=gData.getAudioCapturer();
-
+/*
         ac.setOnAudioFrameCapturedListener(new AudioCapturerInterface.OnAudioFrameCapturedListener() {
             @Override
             public void onAudioFrameCaptured(short[] audioData) {
@@ -52,7 +52,7 @@ public class audioTest extends AppCompatActivity{
                 //ap.play(getAudioData(),0,getAudioData().length);
             }
         });
-
+*/
         findViewById(R.id.btnStartRecord).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
