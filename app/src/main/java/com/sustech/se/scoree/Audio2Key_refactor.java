@@ -6,12 +6,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.media.AudioFormat;
-import android.media.AudioRecord;
-import android.media.MediaRecorder;
 import android.os.AsyncTask;
 
 import com.sustech.se.scoree.audioCapturer.AudioCapturerInterface;
+import com.sustech.se.scoree.audioProcesser.Decoder;
+import com.sustech.se.scoree.audioProcesser.DecoderInterface;
+import com.sustech.se.scoree.audioProcesser.Detector;
+import com.sustech.se.scoree.audioProcesser.DetectorInterface;
 
 
 public class Audio2Key_refactor extends AppCompatActivity{
@@ -19,8 +20,8 @@ public class Audio2Key_refactor extends AppCompatActivity{
     private static final String PERMISSION_AUDIO="android.permission.RECORD_AUDIO";
     private Data gData;
     private AudioCapturerInterface ac;
-    private Detector detector;
-    private Decoder decoder;
+    private DetectorInterface detector;
+    private DecoderInterface decoder;
     AudioAsyncTask audio = null;
     private TextView key_view;
     private Button button;
@@ -69,7 +70,7 @@ public class Audio2Key_refactor extends AppCompatActivity{
     }
 
 
-    public class AudioAsyncTask extends AsyncTask<Void, Integer, Void> {
+    private class AudioAsyncTask extends AsyncTask<Void, Integer, Void> {
 
         @Override
         protected Void doInBackground(Void... datas) {

@@ -1,4 +1,4 @@
-package com.sustech.se.scoree;
+package com.sustech.se.scoree.audioProcesser;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -10,14 +10,14 @@ import java.util.List;
  */
 import com.sustech.se.scoree.fftpack.RealDoubleFFT;
 
-public class Decoder {
+public class Decoder implements DecoderInterface {
     private int blockSize;
     private int frequency;
     public Decoder(int blockSize, int frequency){
         this.blockSize=blockSize;
         this.frequency=frequency;
     }
-
+    @Override
     public int decode(double[] value){
         if (value == null) return -1;
         int ret = value.length;

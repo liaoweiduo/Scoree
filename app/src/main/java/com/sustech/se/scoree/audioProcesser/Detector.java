@@ -1,4 +1,4 @@
-package com.sustech.se.scoree;
+package com.sustech.se.scoree.audioProcesser;
 
 import android.util.Log;
 import com.sustech.se.scoree.fftpack.RealDoubleFFT;
@@ -8,25 +8,24 @@ import com.sustech.se.scoree.fftpack.RealDoubleFFT;
  * Created by David GAO on 2017/4/20.
  */
 
-public class Detector{
+public class Detector implements DetectorInterface{
     private RealDoubleFFT fftTrans;
     private int blockSize;
     private double[] freq_vct;
-    private int ave = 0;//average data
     private int[] det = new int[3];//This is an int array to record recent average value for comparision.
     private int loop_cun = 0;
     private int counter = 0;//This counter is used to count the number of short[] got from listener.
 
-    Detector(int blockSize){
+    public Detector(int blockSize){
         this.blockSize = blockSize;
         fftTrans = new RealDoubleFFT(blockSize);
         freq_vct = new double[blockSize];
     }
-
+    @Override
     public double[] detect(short[] audioData){
         int ret = audioData.length;
         if (ret > blockSize) return null;
-        ave = average(audioData);
+        int ave = average(audioData);   //average data
         det[loop_cun % 3] = ave;
         loop_cun++;
         if(ave > 3 * det[(loop_cun + 1)%3]){// 至少比上上个信号强5倍
@@ -42,7 +41,7 @@ public class Detector{
         return null;
     }
 
-    public int average(short[] d) {
+    private int average(short[] d) {
         long tmp = 0;
         for (int i = 0; i < d.length; i++) {
             if (d[i] > 0) {

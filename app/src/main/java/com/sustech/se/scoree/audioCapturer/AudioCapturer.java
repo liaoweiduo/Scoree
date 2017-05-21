@@ -34,7 +34,7 @@ public class AudioCapturer implements AudioCapturerInterface {
     private boolean mIsCaptureStarted = false;
     private volatile boolean mIsLoopExit = false;
 
-    private OnAudioFrameCapturedListener mAudioFrameCapturedListener;
+    private OnAudioFrameCapturedListener mAudioFrameCapturedListener = null;
 
     @Override
     public boolean audioCaptuerInit(AudioCapturerConfig acc) {
@@ -85,14 +85,14 @@ public class AudioCapturer implements AudioCapturerInterface {
         }
 
         mIsLoopExit = true;
-        /*
-        try {
-            mCaptureThread.interrupt();
-            mCaptureThread.join(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if(mAudioFrameCapturedListener != null) {
+            try {
+                mCaptureThread.interrupt();
+                mCaptureThread.join(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-        */
         if (mAudioRecord.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING) {
             mAudioRecord.stop();
         }
@@ -129,10 +129,10 @@ public class AudioCapturer implements AudioCapturerInterface {
 
         mIsLoopExit = false;
         mIsCaptureStarted = true;
-        /*
-        mCaptureThread = new Thread(new AudioCaptureRunnable());
-        mCaptureThread.start();
-        */
+        if(mAudioFrameCapturedListener != null) {
+            mCaptureThread = new Thread(new AudioCaptureRunnable());
+            mCaptureThread.start();
+        }
 
         Log.d(TAG, "Start audio capture success !");
 

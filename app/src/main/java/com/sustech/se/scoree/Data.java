@@ -16,17 +16,16 @@ import com.sustech.se.scoree.audioCapturer.AudioCapturerInterface;
  */
 
 public class Data extends Application {
+/*
     private Queue<short[]> dataQueue;
     private Semaphore dataMutex;
     private Semaphore dataFullBuffers;
     private Semaphore dataEmptyBuffers;
-
+*/
     private AudioCapturerConfig audioCapturerConfig;
     private AudioCapturerInterface audioCapturer=null;
 
-    private int keyValue;
-
-
+/*
     private Queue<short[]> getDataQueue() {
         return dataQueue;
     }
@@ -62,7 +61,7 @@ public class Data extends Application {
     public void releaseDataEmptyBuffers() throws InterruptedException {
         dataEmptyBuffers.release();
     }
-
+*/
     public AudioCapturerConfig getAudioCapturerConfig() {
         return audioCapturerConfig;
     }
@@ -82,23 +81,17 @@ public class Data extends Application {
         return audioCapturer;
     }
 
-    public int getKeyValue() {
-        return keyValue;
-    }
-
-    public void setKeyValue(int keyValue) {
-        this.keyValue = keyValue;
-    }
 
     @Override
     public void onCreate() {
         super.onCreate();
+/*
         dataQueue = new LinkedList<>();
         int buffersMax = 1000000;
         dataMutex = new Semaphore(1);
         dataFullBuffers = new Semaphore(0);
         dataEmptyBuffers = new Semaphore(buffersMax);
-
+*/
         int SOURCE = MediaRecorder.AudioSource.MIC;
         int SAMPLE_RATE = 8000;   //44100
         int CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_STEREO;
