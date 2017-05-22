@@ -265,6 +265,7 @@ public class ShowFace extends AppCompatActivity {
         accImages[6] = (ImageView)findViewById(R.id.Accidental6);
         accImages[7] = (ImageView)findViewById(R.id.Accidental7);
     }
+<<<<<<< HEAD:app/src/main/java/com/sustech/se/scoree/ShowFace.java
     // Returns the length in eighth notes
     public int fractionToInt(String fraction)
     {
@@ -363,3 +364,6 @@ public class ShowFace extends AppCompatActivity {
         imgAccidental.setY(note.getY());
     }*/
 }
+=======
+}
+>>>>>>> parent of 68837b6... Merge pull request #3 from liaoweiduo/pr/2:app/src/main/java/com/sustech/se/scoree/MainActivity.java
