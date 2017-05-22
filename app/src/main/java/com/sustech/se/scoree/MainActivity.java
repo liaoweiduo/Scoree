@@ -1,3 +1,4 @@
+<<<<<<< HEAD:app/src/main/java/com/sustech/se/scoree/ShowFace.java
 package com.sustech.se.scoree;
 
 import android.graphics.drawable.Drawable;
@@ -363,3 +364,18 @@ public class ShowFace extends AppCompatActivity {
         imgAccidental.setY(note.getY());
     }*/
 }
+=======
+package com.sustech.se.scoree;
+
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+    }
+}
+>>>>>>> master:app/src/main/java/com/sustech/se/scoree/MainActivity.java

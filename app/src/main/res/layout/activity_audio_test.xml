@@ -12,12 +12,6 @@
     tools:context="com.sustech.se.scoree.audioTest">
 
     <Button
-        android:text="Start Record"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnStartRecord"/>
-
-    <Button
         android:text="Stop Record"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,4 +26,13 @@
         android:layout_height="match_parent"
         android:id="@+id/data"
         android:layout_below="@+id/btnStopRecord" />
+
+    <Button
+        android:text="Start Record"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnStartRecord"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>
