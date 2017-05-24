@@ -2,4 +2,9 @@
     <string name="app_name">Scoree</string>
     <string name="start">Start</string>
     <string name="stop">Stop</string>
+    <string name="source">source</string>
+    <string name="sampleRate">sampleRate</string>
+    <string name="channelConfig">channelConfig</string>
+    <string name="audioFormat">audioFormat</string>
+    <string name="bufferSize">bufferSize</string>
 </resources>

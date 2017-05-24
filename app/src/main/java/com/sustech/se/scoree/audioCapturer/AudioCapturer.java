@@ -86,6 +86,7 @@ public class AudioCapturer implements AudioCapturerInterface {
 
         mIsLoopExit = true;
         if(mAudioFrameCapturedListener != null) {
+            Log.e(TAG, "stop capture with capturedListener");
             try {
                 mCaptureThread.interrupt();
                 mCaptureThread.join(1000);
@@ -97,9 +98,8 @@ public class AudioCapturer implements AudioCapturerInterface {
             mAudioRecord.stop();
         }
 
-        mAudioRecord.release();
-
         mIsCaptureStarted = false;
+        mAudioRecord.release();
         mAudioFrameCapturedListener = null;
 
         Log.d(TAG, "Stop audio capture success !");
@@ -130,6 +130,7 @@ public class AudioCapturer implements AudioCapturerInterface {
         mIsLoopExit = false;
         mIsCaptureStarted = true;
         if(mAudioFrameCapturedListener != null) {
+            Log.d(TAG, "audio capture with capturedListener");
             mCaptureThread = new Thread(new AudioCaptureRunnable());
             mCaptureThread.start();
         }
@@ -150,9 +151,9 @@ public class AudioCapturer implements AudioCapturerInterface {
 
                 int ret = mAudioRecord.read(buffer, 0, DEFAULT_BUFFER_SIZE);
                 if (ret == AudioRecord.ERROR_INVALID_OPERATION) {
-                    Log.e(TAG, "Error ERROR_INVALID_OPERATION");
+                    Log.e(TAG, "Thread: Error ERROR_INVALID_OPERATION");
                 } else if (ret == AudioRecord.ERROR_BAD_VALUE) {
-                    Log.e(TAG, "Error ERROR_BAD_VALUE");
+                    Log.e(TAG, "Thread: Error ERROR_BAD_VALUE");
                 } else {
                     if (mAudioFrameCapturedListener != null) {
                         mAudioFrameCapturedListener.onAudioFrameCaptured(buffer);

@@ -1,11 +1,14 @@
 package com.sustech.se.scoree;
 
 import android.app.Application;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.media.AudioFormat;
 import android.media.MediaRecorder;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.Semaphore;
+import android.util.Log;
 
 import com.sustech.se.scoree.audioCapturer.AudioCapturer;
 import com.sustech.se.scoree.audioCapturer.AudioCapturerConfig;
@@ -92,11 +95,24 @@ public class Data extends Application {
         dataFullBuffers = new Semaphore(0);
         dataEmptyBuffers = new Semaphore(buffersMax);
 */
-        int SOURCE = MediaRecorder.AudioSource.MIC;
-        int SAMPLE_RATE = 8000;   //44100
-        int CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_STEREO;
-        int AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT;
-        int BUFFER_SIZE = 2048;
+
+        SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
+        int SOURCE = sp.getInt(getString(R.string.source), MediaRecorder.AudioSource.MIC);
+        int SAMPLE_RATE = sp.getInt(getString(R.string.sampleRate), 8000);
+        int CHANNEL_CONFIG = sp.getInt(getString(R.string.channelConfig), AudioFormat.CHANNEL_IN_STEREO);
+        int AUDIO_FORMAT = sp.getInt(getString(R.string.audioFormat), AudioFormat.ENCODING_PCM_16BIT);
+        int BUFFER_SIZE = sp.getInt(getString(R.string.bufferSize), 2048);
         audioCapturerConfig = new AudioCapturerConfig(SOURCE, SAMPLE_RATE, CHANNEL_CONFIG, AUDIO_FORMAT, BUFFER_SIZE);
+
+/*
+        Editor editor = sp.edit();
+        editor.putInt(getString(R.string.source), MediaRecorder.AudioSource.MIC);
+        editor.putInt(getString(R.string.sampleRate), 8000);
+        editor.putInt(getString(R.string.channelConfig), AudioFormat.CHANNEL_IN_STEREO);
+        editor.putInt(getString(R.string.audioFormat), AudioFormat.ENCODING_PCM_16BIT);
+        editor.putInt(getString(R.string.bufferSize), 2048);
+        if(editor.commit() != ) Log.e;
+*/
+
     }
 }

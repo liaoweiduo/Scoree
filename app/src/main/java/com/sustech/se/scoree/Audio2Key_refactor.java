@@ -1,4 +1,5 @@
 package com.sustech.se.scoree;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,12 +8,21 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
+import com.sustech.se.scoree.UI.Note;
 import com.sustech.se.scoree.audioCapturer.AudioCapturerInterface;
 import com.sustech.se.scoree.audioProcesser.Decoder;
 import com.sustech.se.scoree.audioProcesser.DecoderInterface;
 import com.sustech.se.scoree.audioProcesser.Detector;
 import com.sustech.se.scoree.audioProcesser.DetectorInterface;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 
 
 public class Audio2Key_refactor extends AppCompatActivity{
@@ -49,9 +59,9 @@ public class Audio2Key_refactor extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 if (started){//cancel
-                    started = false;
                     ac.stopCapture();
                     button.setText(R.string.start);
+                    started = false;
                 }
                 else {
                     int checkPermission=checkCallingOrSelfPermission(PERMISSION_AUDIO);
@@ -59,14 +69,51 @@ public class Audio2Key_refactor extends AppCompatActivity{
                         Log.e("MainActivity","No permission for audio");
                         return;
                     }
-                    started = true;
                     ac.startCapture();
-                    if (audio == null) audio= new AudioAsyncTask();
+                    audio = new AudioAsyncTask();
                     audio.execute();
+
                     button.setText(R.string.stop);
+                    started = true;
                 }
             }
         });
+
+
+        /*
+        songs test
+         */
+        Toast.makeText(this, "test songs", Toast.LENGTH_SHORT).show();
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(
+                getResources().openRawResource(R.raw.bugfly)));
+        int num=0;
+        Note[] notes;
+        try {
+            num = Integer.parseInt(reader.readLine());
+            notes = new Note[num];
+            System.out.printf("num=%d\n",num);
+            for (int i=0;i<num;i++){
+                String[] raw = reader.readLine().split(" ");
+                int beats = Integer.parseInt(raw[0]);
+                int pitch = Integer.parseInt(raw[1]);
+                System.out.printf("%d %d\n",beats,pitch);
+                notes[i] = new Note(beats, pitch);
+            }
+            reader.close();
+
+
+            OutputStream os = openFileOutput("data", Context.MODE_PRIVATE);
+            os.write(num);os.write(" ".getBytes());
+            for (int i=0;i<num;i++){
+                os.write(notes[i].getBeats());os.write(" ".getBytes());
+                os.write(notes[i].getPitch());os.write(" ".getBytes());
+            }
+            os.flush();
+            os.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -88,6 +135,17 @@ public class Audio2Key_refactor extends AppCompatActivity{
         protected void onProgressUpdate(Integer... keys) {
             int key = keys[0];
             key_view.setText("Key:" + String.valueOf(key));
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            Log.i("mainActivity", "onPostExecute() called");
+        }
+
+        //onCancelled方法用于在取消执行中的任务时更改UI
+        @Override
+        protected void onCancelled() {
+            Log.i("mainActivity", "onCancelled() called");
         }
     }
 }
