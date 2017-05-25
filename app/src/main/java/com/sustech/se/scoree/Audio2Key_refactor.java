@@ -17,9 +17,7 @@ import com.sustech.se.scoree.audioProcesser.DecoderInterface;
 import com.sustech.se.scoree.audioProcesser.Detector;
 import com.sustech.se.scoree.audioProcesser.DetectorInterface;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -47,6 +45,14 @@ public class Audio2Key_refactor extends AppCompatActivity{
 
         key_view=(TextView) findViewById(R.id.key);
         ac=gData.getAudioCapturer();
+
+        int checkPermission=checkCallingOrSelfPermission(PERMISSION_AUDIO);
+        if(checkPermission!= PackageManager.PERMISSION_GRANTED){
+            Log.e("MainActivity","No permission for audio");
+            Toast.makeText(this, "No permission for audio", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         /*
         ac.setOnAudioFrameCapturedListener(new AudioCapturerInterface.OnAudioFrameCapturedListener() {
             @Override
@@ -87,14 +93,17 @@ public class Audio2Key_refactor extends AppCompatActivity{
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(
                 getResources().openRawResource(R.raw.bugfly)));
-        int num=0;
+        int num;
         Note[] notes;
         try {
             num = Integer.parseInt(reader.readLine());
             notes = new Note[num];
             System.out.printf("num=%d\n",num);
+            String[] raw = reader.readLine().split(" ");
+            int whichfenyingfu = Integer.parseInt(raw[0]);
+            int meixiaojiewhich = Integer.parseInt(raw[1]);
             for (int i=0;i<num;i++){
-                String[] raw = reader.readLine().split(" ");
+                raw = reader.readLine().split(" ");
                 int beats = Integer.parseInt(raw[0]);
                 int pitch = Integer.parseInt(raw[1]);
                 System.out.printf("%d %d\n",beats,pitch);
