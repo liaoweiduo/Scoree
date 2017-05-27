@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#423752"
+    >
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_horizontal_ntb"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_weight="1"/>
+
+    <TextView
+        android:id="@+id/setting"
+        android:layout_width="50dp"
+        android:layout_height="30dp"
+        android:layout_below="@id/vp_horizontal_ntb"
+        android:layout_margin="16dp"
+        android:text="设置"
+        android:textSize="18sp"/>
+
+    <ImageView
+        android:id="@+id/setting_icon"
+        android:layout_width="20dp"
+        android:layout_height="30dp"
+        android:layout_below="@id/vp_horizontal_ntb"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@id/setting"
+        android:layout_marginTop="16dp"
+        android:background="#03A9F4"
+        />
+
+    <TextView
+        android:id="@+id/display_normal"
+        android:layout_width="80dp"
+        android:layout_height="100dp"
+        android:layout_below="@id/setting"
+        android:text="普通"
+        android:textSize="18sp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="20dp"
+        android:background="#03A9F4"
+        />
+
+    <TextView
+        android:id="@+id/display_scroll"
+        android:layout_width="80dp"
+        android:layout_height="100dp"
+        android:layout_below="@id/setting"
+        android:layout_toRightOf="@id/display_normal"
+        android:text="滚动"
+        android:textSize="18sp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="20dp"
+        android:background="#03A9F4"
+        />
+
+    <TextView
+        android:id="@+id/display_split"
+        android:layout_width="80dp"
+        android:layout_height="100dp"
+        android:layout_below="@id/setting"
+        android:layout_toRightOf="@id/display_scroll"
+        android:text="分屏"
+        android:textSize="18sp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="20dp"
+        android:background="#03A9F4"
+        />
+
+    <TextView
+        android:id="@+id/note_size"
+        android:layout_width="80dp"
+        android:layout_height="20dp"
+        android:layout_below="@id/display_normal"
+        android:text="音符大小"
+        android:textSize="18sp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="40dp"
+        android:background="#03A9F4"
+        />
+
+    <TextView
+        android:id="@+id/highlight_color"
+        android:layout_width="80dp"
+        android:layout_height="20dp"
+        android:layout_below="@id/display_scroll"
+        android:layout_toRightOf="@id/note_size"
+        android:text="突出显示"
+        android:textSize="18sp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="40dp"
+        android:background="#03A9F4"
+        />
+
+    <TextView
+        android:id="@+id/line_spacing"
+        android:layout_width="80dp"
+        android:layout_height="20dp"
+        android:layout_below="@id/display_split"
+        android:layout_toRightOf="@id/highlight_color"
+        android:text="行间距"
+        android:textSize="18sp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="40dp"
+        android:background="#03A9F4"
+        />
+
+    <ImageView
+        android:id="@+id/setting_display"
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/note_size"
+        android:background="#03A9F4"
+        android:layout_marginLeft="95dp"
+        android:layout_marginTop="40dp"/>
+
+    <devlight.io.library.ntb.NavigationTabBar
+        android:id="@+id/ntb_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:ntb_badge_gravity="top"
+        app:ntb_badge_position="right"
+        app:ntb_badged="true"
+        app:ntb_scaled="true"
+        app:ntb_tinted="true"
+        app:ntb_title_mode="all"
+        app:ntb_titled="true"
+        app:ntb_swiped="true"/>
+
+</RelativeLayout>

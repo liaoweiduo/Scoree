@@ -10,7 +10,6 @@ import android.widget.TextView;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import com.sustech.se.scoree.UI.Note;
 import com.sustech.se.scoree.audioCapturer.AudioCapturerInterface;
 import com.sustech.se.scoree.audioProcesser.Decoder;
 import com.sustech.se.scoree.audioProcesser.DecoderInterface;
@@ -21,8 +20,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-
-import devlight.io.library.ntb.NavigationTabBar;
 
 public class Audio2Key_refactor extends AppCompatActivity{
 
@@ -87,43 +84,13 @@ public class Audio2Key_refactor extends AppCompatActivity{
         });
 
 
-        /*
-        songs test
-         */
+        // Toast
         Toast.makeText(this, "test songs", Toast.LENGTH_SHORT).show();
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(
-                getResources().openRawResource(R.raw.bugfly)));
-        int num;
-        Note[] notes;
-        try {
-            num = Integer.parseInt(reader.readLine());
-            notes = new Note[num];
-            System.out.printf("num=%d\n",num);
-            String[] raw = reader.readLine().split(" ");
-            int whichfenyingfu = Integer.parseInt(raw[0]);
-            int meixiaojiewhich = Integer.parseInt(raw[1]);
-            for (int i=0;i<num;i++){
-                raw = reader.readLine().split(" ");
-                int beats = Integer.parseInt(raw[0]);
-                int pitch = Integer.parseInt(raw[1]);
-                System.out.printf("%d %d\n",beats,pitch);
-                notes[i] = new Note(beats, pitch);
-            }
-            reader.close();
+        // Test reader
+        Song song = FileReader.getSongFromInputStream(getResources().openRawResource(R.raw.bugfly));
 
-
-            OutputStream os = openFileOutput("data", Context.MODE_PRIVATE);
-            os.write(num);os.write(" ".getBytes());
-            for (int i=0;i<num;i++){
-                os.write(notes[i].getBeats());os.write(" ".getBytes());
-                os.write(notes[i].getPitch());os.write(" ".getBytes());
-            }
-            os.flush();
-            os.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        System.out.printf("test song: %s\n", song.getName());
     }
 
 
