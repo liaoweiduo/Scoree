@@ -19,21 +19,21 @@ import java.util.ArrayList;
 /**
  * Created by GIGAMOLE on 28.03.2016.
  */
-public class SettingFace extends Activity {
+public class VerticalNtbActivity extends Activity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting_face);
+        setContentView(R.layout.activity_vertical_ntb);
         initUI();
     }
 
     private void initUI() {
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.vp_horizontal_ntb);
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.vp_vertical_ntb);
         viewPager.setAdapter(new PagerAdapter() {
             @Override
             public int getCount() {
-                return 5;
+                return 8;
             }
 
             @Override
@@ -59,88 +59,69 @@ public class SettingFace extends Activity {
             }
         });
 
-        final String[] colors = getResources().getStringArray(R.array.default_preview);
+        final String[] colors = getResources().getStringArray(R.array.vertical_ntb);
 
-        final NavigationTabBar navigationTabBar = (NavigationTabBar) findViewById(R.id.ntb_horizontal);
+        final NavigationTabBar navigationTabBar = (NavigationTabBar) findViewById(R.id.ntb_vertical);
         final ArrayList<NavigationTabBar.Model> models = new ArrayList<>();
         models.add(
                 new NavigationTabBar.Model.Builder(
-                        getResources().getDrawable(R.drawable.ic_first),
+                        getResources().getDrawable(R.drawable.first),
                         Color.parseColor(colors[0]))
-                        .selectedIcon(getResources().getDrawable(R.drawable.ic_sixth))
-                        .title("Heart")
-                        .badgeTitle("NTB")
+                        .selectedIcon(getResources().getDrawable(R.drawable.sixth))
                         .build()
         );
         models.add(
                 new NavigationTabBar.Model.Builder(
-                        getResources().getDrawable(R.drawable.ic_second),
+                        getResources().getDrawable(R.drawable.second),
                         Color.parseColor(colors[1]))
-//                        .selectedIcon(getResources().getDrawable(R.drawable.ic_eighth))
-                        .title("Cup")
-                        .badgeTitle("with")
+                        .selectedIcon(getResources().getDrawable(R.drawable.sixth))
                         .build()
         );
         models.add(
                 new NavigationTabBar.Model.Builder(
-                        getResources().getDrawable(R.drawable.ic_third),
+                        getResources().getDrawable(R.drawable.third),
                         Color.parseColor(colors[2]))
-                        .selectedIcon(getResources().getDrawable(R.drawable.ic_seventh))
-                        .title("Diploma")
-                        .badgeTitle("state")
+                        .selectedIcon(getResources().getDrawable(R.drawable.sixth))
                         .build()
         );
         models.add(
                 new NavigationTabBar.Model.Builder(
-                        getResources().getDrawable(R.drawable.ic_fourth),
+                        getResources().getDrawable(R.drawable.fourth),
                         Color.parseColor(colors[3]))
-//                        .selectedIcon(getResources().getDrawable(R.drawable.ic_eighth))
-                        .title("Flag")
-                        .badgeTitle("icon")
+                        .selectedIcon(getResources().getDrawable(R.drawable.sixth))
                         .build()
         );
         models.add(
                 new NavigationTabBar.Model.Builder(
-                        getResources().getDrawable(R.drawable.ic_fifth),
+                        getResources().getDrawable(R.drawable.fifth),
                         Color.parseColor(colors[4]))
-                        .selectedIcon(getResources().getDrawable(R.drawable.ic_eighth))
-                        .title("Medal")
-                        .badgeTitle("777")
+                        .selectedIcon(getResources().getDrawable(R.drawable.sixth))
                         .build()
         );
-
+        models.add(
+                new NavigationTabBar.Model.Builder(
+                        getResources().getDrawable(R.drawable.sixth),
+                        Color.parseColor(colors[5]))
+                        .selectedIcon(getResources().getDrawable(R.drawable.sixth))
+                        .build()
+        );
+        /*
+        models.add(
+                new NavigationTabBar.Model.Builder(
+                        getResources().getDrawable(R.drawable.ic_seventh),
+                        Color.parseColor(colors[6]))
+                        .selectedIcon(getResources().getDrawable(R.drawable.ic_eighth))
+                        .build()
+        );
+        models.add(
+                new NavigationTabBar.Model.Builder(
+                        getResources().getDrawable(R.drawable.ic_eighth),
+                        Color.parseColor(colors[7]))
+                        .selectedIcon(getResources().getDrawable(R.drawable.ic_eighth))
+                        .build()
+        );
+        */
         navigationTabBar.setModels(models);
-        navigationTabBar.setViewPager(viewPager, 2);
-        navigationTabBar.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(final int position) {
-                navigationTabBar.getModels().get(position).hideBadge();
-            }
-
-            @Override
-            public void onPageScrollStateChanged(final int state) {
-
-            }
-        });
-
-        navigationTabBar.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < navigationTabBar.getModels().size(); i++) {
-                    final NavigationTabBar.Model model = navigationTabBar.getModels().get(i);
-                    navigationTabBar.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            model.showBadge();
-                        }
-                    }, i * 100);
-                }
-            }
-        }, 500);
+        navigationTabBar.setViewPager(viewPager, 4);
     }
 }
