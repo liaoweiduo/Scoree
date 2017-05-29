@@ -3,7 +3,6 @@ package com.sustech.se.scoree.UI;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -17,7 +16,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +30,7 @@ import com.sustech.se.scoree.R;
  */
 public class MainActivity extends Activity implements RadioGroup.OnCheckedChangeListener, AdapterView.OnItemSelectedListener {
     Data gData;
+    View mainView;
     View settingView;
 
     @Override
@@ -39,6 +38,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         gData = ((Data) getApplicationContext());
+        mainView = LayoutInflater.from(getBaseContext()).inflate(R.layout.item_main, null, false);
         settingView = LayoutInflater.from(getBaseContext()).inflate(R.layout.item_setting, null, false);
         initUI();
     }
@@ -65,13 +65,9 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
             @Override
             public Object instantiateItem(final ViewGroup container, final int position) {
                 if (position == 0) {    //main face and show face
-                    final View view = LayoutInflater.from(getBaseContext()).inflate(R.layout.item_vp, null, false);
-
-                    final TextView txtPage = (TextView) view.findViewById(R.id.txt_vp_item_page);
-                    txtPage.setText(String.format("Page #%d", position));
-
-                    container.addView(view);
-                    return view;
+                    initMainFace();
+                    container.addView(mainView);
+                    return mainView;
                 } else {  //setting face
                     initSettingFace();
                     container.addView(settingView);
@@ -103,6 +99,10 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
 
         navigationTabBar.setModels(models);
         navigationTabBar.setViewPager(viewPager, 0);
+    }
+
+    private void initMainFace(){
+
     }
 
     private void initSettingFace() {

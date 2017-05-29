@@ -1,5 +1,7 @@
 package com.sustech.se.scoree;
 
+import android.widget.ImageView;
+
 /**
  * Created by liaoweiduo on 27/05/2017.
  */
@@ -10,13 +12,16 @@ public class Song {
     private int numOfNotes;
     private Note[] notes;
     private int pixPerLine;
+    private ImageView[] imgOfStaffs;
+    private int beats[];
 
-    public Song(String name, int numOfLine, Note[] notes, int pixPerLine){
+    public Song(String name, int numOfLine, Note[] notes, int pixPerLine, int beats[]){
         this.name = name;
         this.numOfLine = numOfLine;
         this.numOfNotes = notes.length;
         this.pixPerLine = pixPerLine;
         this.notes = notes;
+        this.beats = beats;
     }
 
     public String getName(){
@@ -37,5 +42,13 @@ public class Song {
 
     public int getPixPerLine() {
         return pixPerLine;
+    }
+
+    public void setImgOfStaffs(ImageView[] imgs){
+        imgOfStaffs = imgs;
+    }
+
+    public ImageView getImgOfStaff(int index){
+        return imgOfStaffs[index];
     }
 }
