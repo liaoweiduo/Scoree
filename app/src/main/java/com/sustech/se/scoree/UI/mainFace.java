@@ -93,7 +93,7 @@ public class mainFace extends Activity {
         );
         models.add(
                 new NavigationTabBar.Model.Builder(
-                        getResources().getDrawable(R.drawable.fifth),
+                        getResources().getDrawable(R.drawable.ic_main),
                         Color.parseColor(colors[4]))
                         .selectedIcon(getResources().getDrawable(R.drawable.sixth))
                         .build()

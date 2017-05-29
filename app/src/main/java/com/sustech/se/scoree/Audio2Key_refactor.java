@@ -16,11 +16,6 @@ import com.sustech.se.scoree.audioProcesser.DecoderInterface;
 import com.sustech.se.scoree.audioProcesser.Detector;
 import com.sustech.se.scoree.audioProcesser.DetectorInterface;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-
 public class Audio2Key_refactor extends AppCompatActivity{
 
     private static final String PERMISSION_AUDIO="android.permission.RECORD_AUDIO";
@@ -88,7 +83,7 @@ public class Audio2Key_refactor extends AppCompatActivity{
         Toast.makeText(this, "test songs", Toast.LENGTH_SHORT).show();
 
         // Test reader
-        Song song = FileReader.getSongFromInputStream(getResources().openRawResource(R.raw.bugfly));
+        Song song = FileReader.getSongFromInputStream(getResources().openRawResource(R.raw.youandme));
 
         System.out.printf("test song: %s\n", song.getName());
     }

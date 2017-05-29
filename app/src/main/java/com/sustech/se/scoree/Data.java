@@ -3,6 +3,7 @@ package com.sustech.se.scoree;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.res.Configuration;
 import android.media.AudioFormat;
 import android.media.MediaRecorder;
 import java.util.LinkedList;
@@ -19,52 +20,10 @@ import com.sustech.se.scoree.audioCapturer.AudioCapturerInterface;
  */
 
 public class Data extends Application {
-/*
-    private Queue<short[]> dataQueue;
-    private Semaphore dataMutex;
-    private Semaphore dataFullBuffers;
-    private Semaphore dataEmptyBuffers;
-*/
     private AudioCapturerConfig audioCapturerConfig;
     private AudioCapturerInterface audioCapturer=null;
+    private int pageTurnSetting;
 
-/*
-    private Queue<short[]> getDataQueue() {
-        return dataQueue;
-    }
-
-    public void offer(short[] data){
-        getDataQueue().offer(data);
-    }
-
-    public short[] poll(){
-        return getDataQueue().poll();
-    }
-
-    public void acquireDataMutex() throws InterruptedException {
-        dataMutex.acquire();
-    }
-
-    public void acquireDataFullBuffers() throws InterruptedException {
-        dataFullBuffers.acquire();
-    }
-
-    public void acquireDataEmptyBuffers() throws InterruptedException {
-        dataEmptyBuffers.acquire();
-    }
-
-    public void releaseDataMutex() throws InterruptedException {
-        dataMutex.release();
-    }
-
-    public void releaseDataFullBuffers() throws InterruptedException {
-        dataFullBuffers.release();
-    }
-
-    public void releaseDataEmptyBuffers() throws InterruptedException {
-        dataEmptyBuffers.release();
-    }
-*/
     public AudioCapturerConfig getAudioCapturerConfig() {
         return audioCapturerConfig;
     }
@@ -84,35 +43,34 @@ public class Data extends Application {
         return audioCapturer;
     }
 
+    public int getPageTurnSetting() {
+        return pageTurnSetting;
+    }
+
+    public void setPageTurnSetting(int pageTurnSetting) {
+        this.pageTurnSetting = pageTurnSetting;
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
-/*
-        dataQueue = new LinkedList<>();
-        int buffersMax = 1000000;
-        dataMutex = new Semaphore(1);
-        dataFullBuffers = new Semaphore(0);
-        dataEmptyBuffers = new Semaphore(buffersMax);
-*/
-
         SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
         int SOURCE = sp.getInt(getString(R.string.source), MediaRecorder.AudioSource.MIC);
         int SAMPLE_RATE = sp.getInt(getString(R.string.sampleRate), 8000);
         int CHANNEL_CONFIG = sp.getInt(getString(R.string.channelConfig), AudioFormat.CHANNEL_IN_STEREO);
         int AUDIO_FORMAT = sp.getInt(getString(R.string.audioFormat), AudioFormat.ENCODING_PCM_16BIT);
         int BUFFER_SIZE = sp.getInt(getString(R.string.bufferSize), 2048);
-        audioCapturerConfig = new AudioCapturerConfig(SOURCE, SAMPLE_RATE, CHANNEL_CONFIG, AUDIO_FORMAT, BUFFER_SIZE);
+        int pageTurnSetting = sp.getInt("pageTurnSetting", R.string.normal);
+        this.audioCapturerConfig = new AudioCapturerConfig(SOURCE, SAMPLE_RATE, CHANNEL_CONFIG, AUDIO_FORMAT, BUFFER_SIZE);
+        this.pageTurnSetting = pageTurnSetting;
+    }
 
-/*
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
         Editor editor = sp.edit();
-        editor.putInt(getString(R.string.source), MediaRecorder.AudioSource.MIC);
-        editor.putInt(getString(R.string.sampleRate), 8000);
-        editor.putInt(getString(R.string.channelConfig), AudioFormat.CHANNEL_IN_STEREO);
-        editor.putInt(getString(R.string.audioFormat), AudioFormat.ENCODING_PCM_16BIT);
-        editor.putInt(getString(R.string.bufferSize), 2048);
-        if(editor.commit() != ) Log.e;
-*/
-
+        editor.putInt("pageTurnSetting", pageTurnSetting);
+        editor.apply();
     }
 }

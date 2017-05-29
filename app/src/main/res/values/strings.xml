@@ -7,4 +7,7 @@
     <string name="channelConfig">channelConfig</string>
     <string name="audioFormat">audioFormat</string>
     <string name="bufferSize">bufferSize</string>
+
+    <string name="normal">normal</string>
+    <string name="spilt">spilt</string>
 </resources>
