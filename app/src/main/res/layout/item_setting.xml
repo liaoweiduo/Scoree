@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="8">
+    android:weightSum="10">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -15,6 +15,7 @@
             android:layout_margin="16dp"
             android:text="设置"
             android:textSize="20sp"
+            android:textStyle="bold"
             android:gravity="center"/>
         <ImageView
             android:id="@+id/icon_setting"
@@ -27,12 +28,46 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:text="翻页方式："
-        android:textSize="20sp"/>
+        android:text="乐谱行数："
+        android:textSize="20sp"
+        android:textStyle="bold"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="一面乐谱显示"
+            android:textSize="20sp"
+            android:gravity="center"/>
+        <Spinner
+            android:id="@+id/sp_num_of_lines"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textSize="40sp"
+            android:entries="@array/spa_num_of_lines"
+            android:spinnerMode="dialog" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="行"
+            android:textSize="20sp"
+            android:gravity="center"/>
+    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:text="翻页方式："
+        android:textSize="20sp"
+        android:textStyle="bold"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
         android:orientation="horizontal">
         <RadioGroup
             android:id="@+id/rg_page_turn"
@@ -84,7 +119,6 @@
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:textSize="40sp"
-                    android:entries="@array/spa_split_buffer"
                     android:spinnerMode="dialog"
                     />
 

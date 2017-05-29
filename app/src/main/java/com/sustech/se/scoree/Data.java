@@ -22,6 +22,7 @@ import com.sustech.se.scoree.audioCapturer.AudioCapturerInterface;
 public class Data extends Application {
     private AudioCapturerConfig audioCapturerConfig;
     private AudioCapturerInterface audioCapturer=null;
+    private int numOfLines;
     private int pageTurnSetting;
 
     public AudioCapturerConfig getAudioCapturerConfig() {
@@ -43,6 +44,14 @@ public class Data extends Application {
         return audioCapturer;
     }
 
+    public int getNumOfLines() {
+        return numOfLines;
+    }
+
+    public void setNumOfLines(int numOfLines) {
+        this.numOfLines = numOfLines;
+    }
+
     public int getPageTurnSetting() {
         return pageTurnSetting;
     }
@@ -60,17 +69,11 @@ public class Data extends Application {
         int CHANNEL_CONFIG = sp.getInt(getString(R.string.channelConfig), AudioFormat.CHANNEL_IN_STEREO);
         int AUDIO_FORMAT = sp.getInt(getString(R.string.audioFormat), AudioFormat.ENCODING_PCM_16BIT);
         int BUFFER_SIZE = sp.getInt(getString(R.string.bufferSize), 2048);
-        int pageTurnSetting = sp.getInt("pageTurnSetting", R.string.normal);
+        int numOfLines = sp.getInt("numOfLines", getResources().getInteger(R.integer.defaultNumOfLine));
+        int pageTurnSetting = sp.getInt("pageTurnSetting", numOfLines);
+        Log.i("Data","numoflines="+numOfLines+" pageturnsetting="+pageTurnSetting);
         this.audioCapturerConfig = new AudioCapturerConfig(SOURCE, SAMPLE_RATE, CHANNEL_CONFIG, AUDIO_FORMAT, BUFFER_SIZE);
+        this.numOfLines = numOfLines;
         this.pageTurnSetting = pageTurnSetting;
-    }
-
-    @Override
-    public void onTerminate() {
-        super.onTerminate();
-        SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
-        Editor editor = sp.edit();
-        editor.putInt("pageTurnSetting", pageTurnSetting);
-        editor.apply();
     }
 }

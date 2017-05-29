@@ -1,6 +1,7 @@
 package com.sustech.se.scoree.UI;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import devlight.io.library.ntb.NavigationTabBar;
 
@@ -70,7 +73,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                     container.addView(view);
                     return view;
                 } else {  //setting face
-                    initSettingFace(settingView);
+                    initSettingFace();
                     container.addView(settingView);
                     return settingView;
                 }
@@ -102,50 +105,78 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         navigationTabBar.setViewPager(viewPager, 0);
     }
 
-    private void initSettingFace(View view) {
-        RadioGroup rg = (RadioGroup) view.findViewById(R.id.rg_page_turn);
-        rg.setOnCheckedChangeListener(this);
-        Spinner sp = (Spinner) view.findViewById(R.id.sp_split_buffer);
-        sp.setOnItemSelectedListener(this);
+    private void initSettingFace() {
+        RadioGroup rg = (RadioGroup) settingView.findViewById(R.id.rg_page_turn);
+        Spinner sp_num_of_lines = (Spinner) settingView.findViewById(R.id.sp_num_of_lines);
+        Spinner sp_split_buffer = (Spinner) settingView.findViewById(R.id.sp_split_buffer);
+        resetSpSplitAdapter();
+        int numOfLines = gData.getNumOfLines();
         int pageTurnSetting = gData.getPageTurnSetting();
-        if (pageTurnSetting == 0) {
+        sp_num_of_lines.setSelection(getResources().getStringArray(R.array.spa_num_of_lines).length + 1 - numOfLines);
+        if (pageTurnSetting == numOfLines) {
             rg.check(R.id.rb_normal);
-        } else {
+            sp_split_buffer.setSelection(0);
+        } else if (pageTurnSetting < numOfLines){
             rg.check(R.id.rb_split);
+            sp_split_buffer.setSelection(numOfLines - pageTurnSetting - 1);
         }
+        rg.setOnCheckedChangeListener(this);
+        sp_num_of_lines.setOnItemSelectedListener(this);
+        sp_split_buffer.setOnItemSelectedListener(this);
+    }
 
+    private void resetSpSplitAdapter(){
+        Spinner sp = (Spinner) settingView.findViewById(R.id.sp_split_buffer);
+        List<String> spl = new ArrayList<>();
+        for (int i = gData.getNumOfLines() -1 ; i > 0; i--) spl.add(String.valueOf(i));
+        ArrayAdapter<String> adapter=new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, spl);
+
+        sp.setAdapter(adapter);
     }
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         if (group.getId() == R.id.rg_page_turn){
-            Spinner sp = (Spinner) settingView.findViewById(R.id.sp_split_buffer);
             if (checkedId == R.id.rb_normal){
-                gData.setPageTurnSetting(0);
-                sp.setOnItemSelectedListener(null);
+                gData.setPageTurnSetting(gData.getNumOfLines());
             }else if (checkedId == R.id.rb_split){
+                Spinner sp = (Spinner) settingView.findViewById(R.id.sp_split_buffer);
                 gData.setPageTurnSetting(Integer.parseInt((String) sp.getSelectedItem()));
-                sp.setOnItemSelectedListener(this);
             }
         }
+        Log.i("onCheckedChanged","numOfLines="+gData.getNumOfLines()+" PageTurnSetting="+gData.getPageTurnSetting());
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (parent.getId() == R.id.sp_split_buffer && gData.getPageTurnSetting() != 0){
+        if (parent.getId() == R.id.sp_num_of_lines){
             String selectedItem = (String) parent.getSelectedItem();
-            if ("1".equals(selectedItem)){
-                gData.setPageTurnSetting(1);
-            }else if ("2".equals(selectedItem)){
-                gData.setPageTurnSetting(2);
-            }else if ("3".equals(selectedItem)){
-                gData.setPageTurnSetting(3);
+            int oldNum = gData.getNumOfLines();
+            if(oldNum != Integer.parseInt(selectedItem)) {
+                gData.setNumOfLines(Integer.parseInt(selectedItem));
+                if (((RadioButton)settingView.findViewById(R.id.rb_normal)).isChecked())
+                    gData.setPageTurnSetting(Integer.parseInt(selectedItem));
+                resetSpSplitAdapter();
             }
+        }else if (parent.getId() == R.id.sp_split_buffer && ((RadioButton)settingView.findViewById(R.id.rb_split)).isChecked()){   //radio button选分屏时
+            String selectedItem = (String) parent.getSelectedItem();
+            gData.setPageTurnSetting(Integer.parseInt(selectedItem));
         }
+        Log.i("onItemSelected","parent="+((parent.getId()==R.id.sp_num_of_lines)?"num of lines":"split buffer")+" numOfLines="+gData.getNumOfLines()+" PageTurnSetting="+gData.getPageTurnSetting());
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        parent.setSelection(0);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onDestroy();
+        SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt("numOfLines", gData.getNumOfLines());
+        editor.putInt("pageTurnSetting", gData.getPageTurnSetting());
+        editor.commit();
+        Log.i("mainActivity","onStop called");
     }
 }
