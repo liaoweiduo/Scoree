@@ -28,9 +28,6 @@ public class Data extends Application {
     public AudioCapturerConfig getAudioCapturerConfig() {
         return audioCapturerConfig;
     }
-    public void setAudioCapturerConfig(AudioCapturerConfig acc){
-        audioCapturerConfig=acc;
-    }
 
     public AudioCapturerInterface getAudioCapturer(){
         if (audioCapturer==null){
