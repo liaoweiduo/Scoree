@@ -1,0 +1,2 @@
+# Scoree
+SUSTech SE project
