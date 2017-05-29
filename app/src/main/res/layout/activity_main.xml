@@ -10,13 +10,20 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="#423752">
+        android:background="#8d88e4">
 
         <devlight.io.library.ntb.NavigationTabBar
             android:id="@+id/ntb_vertical"
             android:layout_width="50dp"
             android:layout_height="100dp"
-            app:ntb_preview_colors="@array/vertical_ntb"/>
+            android:layout_gravity="center"
+            app:ntb_animation_duration="400"
+            app:ntb_preview_colors="@array/red_wine"
+            app:ntb_corners_radius="25dp"
+            app:ntb_scaled="false"
+            app:ntb_active_color="#8d88e4"
+            app:ntb_inactive_color="#dddfec"
+            app:ntb_bg_color="#8d88e4"/>
 
         <ImageView
             android:layout_width="match_parent"
