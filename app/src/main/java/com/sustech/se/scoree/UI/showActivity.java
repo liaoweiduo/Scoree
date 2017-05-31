@@ -79,13 +79,6 @@ public class showActivity extends AppCompatActivity {           //改为 Intent�
         key_view=(TextView) findViewById(R.id.key);
         ac=gData.getAudioCapturer();
 
-        int checkPermission=checkCallingOrSelfPermission(PERMISSION_AUDIO);
-        if(checkPermission!= PackageManager.PERMISSION_GRANTED){
-            Log.e("MainActivity","No permission for audio");
-            Toast.makeText(this, "No permission for audio", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         button = (Button) findViewById(R.id.audioButton);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +93,7 @@ public class showActivity extends AppCompatActivity {           //改为 Intent�
                     int checkPermission=checkCallingOrSelfPermission(PERMISSION_AUDIO);
                     if(checkPermission!= PackageManager.PERMISSION_GRANTED){
                         Log.e("MainActivity","No permission for audio");
+                        requestPermissions(new String[]{PERMISSION_AUDIO}, 0);
                         return;
                     }
                     ac.startCapture();
@@ -205,12 +199,14 @@ public class showActivity extends AppCompatActivity {           //改为 Intent�
         for(int i=0; i<numOfImg; i++){
             imgs[i] = new ImageView(this);
         }
+        /*
         imgs[0].setImageResource(R.drawable.title_youandme);
         imgs[1].setImageResource(R.drawable.one_youandme);
         imgs[2].setImageResource(R.drawable.two_youandme);
         imgs[3].setImageResource(R.drawable.three_youandme);
         imgs[4].setImageResource(R.drawable.four_youandme);
         imgs[5].setImageResource(R.drawable.five_youandme);
+        */
 
         File sdfile = Environment.getExternalStorageDirectory();
         imgs[0].setImageBitmap(FileOperator.getLocalBitmap(sdfile.getPath()+"/staff/youandme/title.png"));

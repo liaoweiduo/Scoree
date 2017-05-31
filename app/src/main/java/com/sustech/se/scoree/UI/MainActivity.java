@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,15 +22,17 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -37,23 +40,24 @@ import java.util.regex.Pattern;
 
 import devlight.io.library.ntb.NavigationTabBar;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.sustech.se.scoree.Data;
-import com.sustech.se.scoree.Note;
+import com.sustech.se.scoree.FileOperator;
 import com.sustech.se.scoree.R;
+import com.sustech.se.scoree.SDCardHelper;
 import com.sustech.se.scoree.Song;
+
+import static android.support.v4.app.ActivityCompat.requestPermissions;
 
 /**
  * Created by GIGAMOLE on 28.03.2016.
  */
 public class MainActivity extends Activity implements RadioGroup.OnCheckedChangeListener, AdapterView.OnItemSelectedListener, View.OnClickListener {
+    private static final String PERMISSION_WRITE="android.permission.WRITE_EXTERNAL_STORAGE";
     private Data gData;
     private View mainView;
     private View settingView;
     public static final String SONG = "com.sustech.se.scoree.SONG";
+    private Song[] songsList;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -62,6 +66,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         gData = ((Data) getApplicationContext());
         mainView = LayoutInflater.from(getBaseContext()).inflate(R.layout.item_main, null, false);
         settingView = LayoutInflater.from(getBaseContext()).inflate(R.layout.item_setting, null, false);
+        saveInitFiles("youandme");
         initUI();
     }
 
@@ -174,16 +179,11 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
 //        getResources().openRawResource(R.raw.)
 
         Log.i("getMatchResult","pattern： " + pattern.toString());
-        Song[] ss = new Song[5];
-        boolean[] match = new boolean[5];
-        ss[0] = new Song("12",1,new Note[4],3,new int[2]);
-        ss[1] = new Song("23",1,new Note[4],3,new int[2]);
-        ss[2] = new Song("34",1,new Note[4],3,new int[2]);
-        ss[3] = new Song("45",1,new Note[4],3,new int[2]);
-        ss[4] = new Song("56",1,new Note[4],3,new int[2]);
+        Song[] songs = gData.getSongs();
+        boolean[] match = new boolean[songs.length];
         int numOfMatch=0;
-        for (int i = 0 ;i < ss.length; i++) {
-            Matcher matcher = pattern.matcher(ss[i].getName());
+        for (int i = 0 ;i < songs.length; i++) {
+            Matcher matcher = pattern.matcher(songs[i].getName());
             match[i] = false;
             if (matcher.matches()){
                 match[i] = true;
@@ -195,13 +195,60 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         }
         Song[] result = new Song[numOfMatch];
         int indexOfResult = 0;
-        for (int i = 0;i < ss.length ; i++) {
+        for (int i = 0;i < songs.length ; i++) {
             if (match[i]){
-                result[indexOfResult++] = ss[i];
+                result[indexOfResult++] = songs[i];
             }
         }
         Log.i("getMatchResult","get " + numOfMatch + " result.(" + indexOfResult + ")");
         return result;
+    }
+
+    private void saveInitFiles(String songName){
+        Log.i("saveInitFiles", "fileList " +fileList().length);
+
+        String songPath = gData.getWorkingDirectory() + "/" + songName;
+        String txtPath = songPath + "/" + songName + ".txt";
+        String imgPath = songPath + "/" + songName + "_";
+        try {
+            File file = new File(getExternalFilesDir(null).getAbsolutePath() + "/" + gData.getWorkingDirectory());
+            if (!file.exists()) Log.i("saveInitFiles","staff path: " + file.getAbsolutePath() + " create " + file.mkdir());
+            file = new File(getExternalFilesDir(null).getAbsolutePath() + "/" + songPath);
+            if (!file.exists()) Log.i("saveInitFiles","songDir path:" + file.getAbsolutePath() + "create " + file.mkdir());
+
+            // 保存 txt
+            if (!SDCardHelper.isFileExist(getExternalFilesDir(null).getAbsolutePath() + "/" + txtPath)) {
+                InputStream is = getAssets().open("songs/" + songName + ".txt");
+                int length = is.available();
+                byte[] buffer = new byte[length];
+                is.read(buffer);
+                if(SDCardHelper.saveFileToSDCardPrivateFilesDir(buffer, null, txtPath, this)){
+                    Log.i("saveInitFiles", "txt file create " +
+                            String.valueOf(SDCardHelper.isFileExist(getExternalFilesDir(null).getAbsolutePath() + "/" + txtPath)));
+                }
+                is.close();
+            }
+
+            //保存图片
+
+            Song song = FileOperator.getSongFromInputStream(new FileInputStream(
+                    new File(getExternalFilesDir(null).getAbsolutePath() + "/" + txtPath)));
+            for (int i=0;i<song.getNumOfLine()+1;i++){
+                InputStream is = getAssets().open("songs/" + songName + "_" + i + ".png");
+                int length = is.available();
+                byte[] buffer = new byte[length];
+                is.read(buffer);
+                if(SDCardHelper.saveFileToSDCardPrivateFilesDir(buffer, null, imgPath + i + ".png", this)){
+                    Log.i("saveInitFiles", "img file " + i + " create " +
+                            String.valueOf(SDCardHelper.isFileExist(getExternalFilesDir(null).getAbsolutePath() + "/" + imgPath + i + ".png")));
+                }
+                is.close();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -209,10 +256,11 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         if (v.getId() == R.id.bt_search) {
             String et_value = ((EditText) mainView.findViewById(R.id.et_search)).getText().toString();
             Pattern pattern = Pattern.compile(".*" + et_value + ".*");
-            gData.setSongs(getMatchResult(pattern));
-            for (Song song : gData.getSongs()){
-                Log.i("onClick","song: "+song.getName());
-            }
+            songsList = getMatchResult(pattern);
+            if (songsList != null)
+                for (Song song : songsList){
+                    Log.i("onClick","song: "+song.getName());
+                }
             resetScoreListAdapter();
         }
     }
@@ -284,15 +332,15 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, final int position) {  //设置text的内容
-            holder.txt.setText(gData.getSongs()[position].getName());
+            holder.txt.setText(songsList[position].getName());
             holder.fl.setTag(position);
         }
 
         @Override
         public int getItemCount() {  //设置list总行数
-            Log.i("getItemCount","get " + (gData.getSongs() == null?0:gData.getSongs().length) + " 行");
-            if (gData.getSongs() == null) return 0;
-            return gData.getSongs().length;
+            Log.i("getItemCount","get " + (songsList == null?0:songsList.length) + " 行");
+            if (songsList == null) return 0;
+            return songsList.length;
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {

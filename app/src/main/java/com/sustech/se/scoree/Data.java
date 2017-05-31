@@ -3,6 +3,7 @@ package com.sustech.se.scoree;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.media.AudioFormat;
 import android.media.MediaRecorder;
@@ -23,6 +24,8 @@ import android.util.Log;
 import com.sustech.se.scoree.audioCapturer.AudioCapturer;
 import com.sustech.se.scoree.audioCapturer.AudioCapturerConfig;
 import com.sustech.se.scoree.audioCapturer.AudioCapturerInterface;
+
+import static android.support.v4.app.ActivityCompat.requestPermissions;
 
 /**
  * Created by liaoweiduo on 08/04/2017.
@@ -84,37 +87,6 @@ public class Data extends Application {
         this.songs = songs;
     }
 
-    private void saveInitFiles(String songName){
-        String songPath = workingDirectory + "/" + songName;
-        File dir = new File(songPath);
-        if (!dir.exists()){
-            dir.mkdir();
-            try {
-                //保存txt
-                File songTxt = new File(songPath, songName + ".txt");
-                if (!songTxt.exists()) {
-                    InputStream is =getAssets().open("songs/" + songName + ".txt");
-                    FileOutputStream fos = new FileOutputStream(songTxt);
-                    int lenght = is.available();
-                    byte[]  buffer = new byte[lenght];
-                    is.read(buffer);
-                    fos.write(buffer);
-                    fos.flush();
-                    is.close();
-                    fos.close();
-                }
-                //保存图片
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }else {
-            Log.i("Data", "youandme exists");
-        }
-
-    }
     @Override
     public void onCreate() {
         super.onCreate();
@@ -130,8 +102,14 @@ public class Data extends Application {
         this.audioCapturerConfig = new AudioCapturerConfig(SOURCE, SAMPLE_RATE, CHANNEL_CONFIG, AUDIO_FORMAT, BUFFER_SIZE);
         this.numOfLines = numOfLines;
         this.pageTurnSetting = pageTurnSetting;
-        workingDirectory = Environment.getExternalStorageDirectory().getPath()+"/staff";
-        saveInitFiles("youandme");
+        workingDirectory = "staff";
         // TODO: 31/05/2017 init songs
+        Song[] ss = new Song[5];
+        ss[0] = new Song("12",1,new Note[4],3,new int[2]);
+        ss[1] = new Song("23",1,new Note[4],3,new int[2]);
+        ss[2] = new Song("34",1,new Note[4],3,new int[2]);
+        ss[3] = new Song("45",1,new Note[4],3,new int[2]);
+        ss[4] = new Song("56",1,new Note[4],3,new int[2]);
+        songs = ss;
     }
 }
