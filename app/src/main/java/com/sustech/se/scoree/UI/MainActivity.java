@@ -67,6 +67,10 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         mainView = LayoutInflater.from(getBaseContext()).inflate(R.layout.item_main, null, false);
         settingView = LayoutInflater.from(getBaseContext()).inflate(R.layout.item_setting, null, false);
         saveInitFiles("youandme");
+        saveInitFiles("chongerfei");
+        saveInitFiles("qianyuqianxun");
+        saveInitFiles("qianlizhiwai");
+        saveInitFiles("huanlesong");
 
         String[] songNameList = FileOperator.getSongs(getExternalFilesDir(null).getAbsolutePath() + "/" + gData.getWorkingDirectory());
         songsList = new Song[songNameList.length];
@@ -155,6 +159,13 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         RadioGroup rg = (RadioGroup) settingView.findViewById(R.id.rg_page_turn);
         Spinner sp_num_of_lines = (Spinner) settingView.findViewById(R.id.sp_num_of_lines);
         Spinner sp_split_buffer = (Spinner) settingView.findViewById(R.id.sp_split_buffer);
+
+        List<String> spl = new ArrayList<>();
+        for(int i = 5 ;i>=2;i--)
+            spl.add(String.valueOf(i));
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, spl);
+        sp_num_of_lines.setAdapter(adapter);
+
         resetSpSplitAdapter();
         int numOfLines = gData.getNumOfLines();
         int pageTurnSetting = gData.getPageTurnSetting();
@@ -175,7 +186,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         Spinner sp = (Spinner) settingView.findViewById(R.id.sp_split_buffer);
         List<String> spl = new ArrayList<>();
         for (int i = gData.getNumOfLines() - 1; i > 0; i--) spl.add(String.valueOf(i));
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spl);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, spl);
 
         sp.setAdapter(adapter);
     }

@@ -13,17 +13,16 @@
             android:id="@+id/et_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="9"
             android:hint="查找的乐谱名称"
             android:textSize="@dimen/text_size"
-            android:gravity="left"/>
+            android:layout_weight="1"
+            android:gravity="start"/>
         <Button
             android:id="@+id/bt_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="搜索"
-            android:textSize="@dimen/text_size" />
+            android:textSize="@dimen/text_size"/>
     </LinearLayout>
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"

@@ -21,13 +21,15 @@
             android:layout_width="100dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:id = "@+id/textView_grade"/>
+            android:id = "@+id/textView_grade"
+            android:textSize="30sp" />
 
         <TextView
             android:layout_width="100dp"
             android:layout_height="match_parent"
             android:background="@drawable/bg_round_rect"
-            android:id="@+id/editText_currentNote" />
+            android:id="@+id/editText_currentNote"
+            android:textSize="30sp" />
 
         <Button
             android:text="Start"

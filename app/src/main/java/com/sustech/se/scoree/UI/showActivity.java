@@ -79,8 +79,8 @@ public class showActivity extends AppCompatActivity {           //改为 Intent�
         initialFrame_staff(numOfLineShown);
         initialIndicator();
         grade = new int[staff.getNumOfNotes()];
-        for(int temp: grade){
-            temp = 0;
+        for(int i=0;i<staff.getNumOfNotes();i++){
+            grade[i] = 0;
         }
 
         currentNote = (TextView)findViewById(R.id.editText_currentNote);
@@ -113,8 +113,11 @@ public class showActivity extends AppCompatActivity {           //改为 Intent�
 
                     button.setText(R.string.stop);
                     started = true;
-                    TextView setGrade = (TextView)findViewById(R.id.textView_grade);
-                    setGrade.setText(String.valueOf(calGrade() * 100 / grade.length));
+                    if(currentMatchingNote==staff.getNumOfNotes()){
+                        TextView setGrade = (TextView)findViewById(R.id.textView_grade);
+                        setGrade.setText(String.valueOf(calGrade() * 100 / grade.length));
+                    }
+
                 }
             }
         });
@@ -131,7 +134,7 @@ public class showActivity extends AppCompatActivity {           //改为 Intent�
     //匹配识别到的琴键
     private void match(int key){
 
-        if(staff.getNumOfNotes()>currentMatchingNote+1){
+        if(staff.getNumOfNotes()>currentMatchingNote){
             Note note = staff.getNoteById(currentMatchingNote);
             currentLine = note.getLineNum();
             if(pastLine<currentLine){
@@ -153,7 +156,7 @@ public class showActivity extends AppCompatActivity {           //改为 Intent�
                 frame_staff[index].addView(indicator);
                 //pastLine = currentLine;
             }
-            currentNote.setText(String.valueOf(note.getPitch()));
+            //currentNote.setText(String.valueOf(note.getPitch()));
             if(note.getPitch() != key){
                 indicator.setBackgroundColor(getResources().getColor(R.color.colorAccent));
                 //++currentMatchingNote;
@@ -162,13 +165,21 @@ public class showActivity extends AppCompatActivity {           //改为 Intent�
             }
             else{
                 indicator.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                ++currentMatchingNote;
-                if(!flag)
+                if(flag)
                     grade[currentMatchingNote] = 1;
                 flag = true;
+                ++currentMatchingNote;
+
+                TextView setGrade = (TextView)findViewById(R.id.textView_grade);
+                if (currentMatchingNote == 0){
+                    setGrade.setText("0");
+                } else {
+                    setGrade.setText(String.valueOf(calGrade())+"/"+String.valueOf(staff.getNumOfNotes()));
+                }
             }
             indicator.setX(note.getPosition()*scale);
             indicator.setY(indicatorY*scale);
+
         }
         else{
             //Toast.makeText(this, "Matching done", Toast.LENGTH_SHORT).show();
@@ -228,7 +239,7 @@ public class showActivity extends AppCompatActivity {           //改为 Intent�
         }
         ImageView imgs[] = new ImageView[numOfImg];
         //imgs[0] = (ImageView)findViewById(R.id.imageView);
-        for(int i=0; i<6; i++){
+        for(int i=0; i<numOfImg; i++){
             imgs[i] = new ImageView(this);
             imgs[i].setImageBitmap(FileOperator.getLoacalBitmap(this, getExternalFilesDir(null).getAbsolutePath() + names[i]));
         }

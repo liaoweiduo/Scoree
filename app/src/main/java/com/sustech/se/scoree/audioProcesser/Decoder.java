@@ -83,16 +83,16 @@ public class Decoder implements DecoderInterface {
         if(candidate.size()>1){
             int max = (int)candidate.get(candidate.size()-1);
             int half = max/2;
-            for(int i = (int)(half*1.04); i>(int)(half*0.94);i--){
-                if(candidate.contains(i) && value[i]>0.85*value[max]){
+            for(int i = (int)(half*1.07); i>(int)(half*0.92);i--){
+                if(candidate.contains(i) && (value[i]>0.8*value[max] || (max <909 && max > 879))){
                     System.out.println("Output:"+String.valueOf(i*frequency/blockSize/2)+"Hz");
                     return i;
                 }
             }
             if((max>500 && max <535) ||(max>480 && max<493)) {
                 int trip = max / 3;
-                for (int i = (int) (trip * 1.08); i > (int) (trip * 0.92); i--) {
-                    if (candidate.contains(i) && value[i]>0.85*value[max]) {
+                for (int i = (int) (trip * 1.08); i > (int) (trip * 0.92); i--) {//改了此处
+                    if (candidate.contains(i) && value[i]>0.85*value[max]) {//改了此处
                         System.out.println("Output:"+String.valueOf(i*frequency/blockSize/2)+"Hz");
                         return i;
                     }
