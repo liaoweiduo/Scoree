@@ -2,11 +2,13 @@ package com.sustech.se.scoree;
 
 import android.widget.ImageView;
 
+import java.io.Serializable;
+
 /**
  * Created by liaoweiduo on 27/05/2017.
  */
 
-public class Song {
+public class Song implements Serializable{
     private String name;
     private int numOfLine;
     private int numOfNotes;

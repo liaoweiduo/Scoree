@@ -1,6 +1,7 @@
 package com.sustech.se.scoree.UI;
 
 import android.content.pm.PackageManager;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,7 +15,7 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.sustech.se.scoree.Data;
-import com.sustech.se.scoree.FileReader;
+import com.sustech.se.scoree.FileOperator;
 import com.sustech.se.scoree.R;
 import com.sustech.se.scoree.Song;
 import com.sustech.se.scoree.Note;
@@ -24,8 +25,11 @@ import com.sustech.se.scoree.audioProcesser.DecoderInterface;
 import com.sustech.se.scoree.audioProcesser.Detector;
 import com.sustech.se.scoree.audioProcesser.DetectorInterface;
 
+import java.io.File;
+import java.io.IOException;
 
-public class showActivity extends AppCompatActivity {
+
+public class showActivity extends AppCompatActivity {           //改为 Intent进来 putExtra是Song
 
     private int maxOfFrame; //界面中frame的最大容量
     private FrameLayout frame_staff[]; //存放每行乐谱图片的famelayout
@@ -107,15 +111,6 @@ public class showActivity extends AppCompatActivity {
                 }
             }
         });
-
-
-        // Toast
-        Toast.makeText(this, "test songs", Toast.LENGTH_SHORT).show();
-
-        // Test reader
-        Song song = FileReader.getSongFromInputStream(getResources().openRawResource(R.raw.youandme));
-
-        System.out.printf("test song: %s\n", song.getName());
     }
 
     //匹配识别到的琴键
@@ -199,7 +194,12 @@ public class showActivity extends AppCompatActivity {
     }
 
     private void initialStaff(){
-        staff = FileReader.getSongFromInputStream(getResources().openRawResource(R.raw.youandme));
+        try {
+            staff = FileOperator.getSongFromInputStream(getAssets().open("/songs/youandme.txt"));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         int numOfImg = staff.getNumOfLine()+1;
         ImageView imgs[] = new ImageView[numOfImg];
         for(int i=0; i<numOfImg; i++){
@@ -211,6 +211,10 @@ public class showActivity extends AppCompatActivity {
         imgs[3].setImageResource(R.drawable.three_youandme);
         imgs[4].setImageResource(R.drawable.four_youandme);
         imgs[5].setImageResource(R.drawable.five_youandme);
+
+        File sdfile = Environment.getExternalStorageDirectory();
+        imgs[0].setImageBitmap(FileOperator.getLocalBitmap(sdfile.getPath()+"/staff/youandme/title.png"));
+
         staff.setImgOfStaffs(imgs);
     }
 

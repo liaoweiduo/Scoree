@@ -83,9 +83,9 @@ public class Audio2Key_refactor extends AppCompatActivity{
         Toast.makeText(this, "test songs", Toast.LENGTH_SHORT).show();
 
         // Test reader
-        Song song = FileReader.getSongFromInputStream(getResources().openRawResource(R.raw.youandme));
-
-        System.out.printf("test song: %s\n", song.getName());
+//        Song song = FileReader.getSongFromInputStream(getResources().openRawResource(R.raw.youandme));
+//
+//        System.out.printf("test song: %s\n", song.getName());
     }
 
 

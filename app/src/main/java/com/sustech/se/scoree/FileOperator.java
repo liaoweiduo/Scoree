@@ -1,8 +1,14 @@
 package com.sustech.se.scoree;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -14,8 +20,8 @@ import com.sustech.se.scoree.Song;
  * Created by liaoweiduo on 27/05/2017.
  */
 
-public class FileReader{
-    static private String TAG = "FileReader";
+public class FileOperator {
+    static private String TAG = "FileOperator";
 
     public static Song getSongFromInputStream(InputStream source){
         BufferedReader reader = new BufferedReader(new InputStreamReader(source));
@@ -53,6 +59,14 @@ public class FileReader{
         }
         return null;
     }
+    public static Bitmap getLocalBitmap(String url) {
+        try {
+            FileInputStream fis = new FileInputStream(url);
+            return BitmapFactory.decodeStream(fis);  ///把流转化为Bitmap图片
 
-
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

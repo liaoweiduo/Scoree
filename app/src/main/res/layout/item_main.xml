@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="9"
             android:hint="查找的乐谱名称"
-            android:textSize="20sp"
+            android:textSize="@dimen/text_size"
             android:gravity="left"/>
         <Button
             android:id="@+id/bt_search"
@@ -23,12 +23,25 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="搜索"
-            android:textSize="20sp" />
+            android:textSize="@dimen/text_size" />
     </LinearLayout>
 
-    <ScrollView
-        android:id="@+id/sv_show_score"
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_show_score"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:clipToPadding="false"
+            android:clipChildren="false"
+            tools:listitem="@layout/item_list_score"/>
+
+    </FrameLayout>
 </LinearLayout>
