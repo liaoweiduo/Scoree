@@ -67,6 +67,16 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         mainView = LayoutInflater.from(getBaseContext()).inflate(R.layout.item_main, null, false);
         settingView = LayoutInflater.from(getBaseContext()).inflate(R.layout.item_setting, null, false);
         saveInitFiles("youandme");
+
+        String[] songNameList = FileOperator.getSongs(getExternalFilesDir(null).getAbsolutePath() + "/" + gData.getWorkingDirectory());
+        songsList = new Song[songNameList.length];
+        for (int i=0;i<songNameList.length;i++) {
+            Log.i("Data", "songNameList " + songNameList[i]);
+            songsList[i] = FileOperator.getSongFromInputStream(
+                    getExternalFilesDir(null).getAbsolutePath() + "/" +
+                            gData.getWorkingDirectory() + "/" + songNameList[i] + "/" + songNameList[i] + ".txt");
+        }
+        gData.setSongs(songsList);
         initUI();
     }
 
@@ -230,7 +240,6 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
             }
 
             //保存图片
-
             Song song = FileOperator.getSongFromInputStream(new FileInputStream(
                     new File(getExternalFilesDir(null).getAbsolutePath() + "/" + txtPath)));
             for (int i=0;i<song.getNumOfLine()+1;i++){
@@ -321,10 +330,9 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                 public void onClick(View v) {
                     int position = (int) v.getTag();
                     Log.i("Recycleadapter on Click","View:" + v.toString() + "/nposition = " + position);
-//                    Intent intent = new Intent(MainActivity.class, showActivity.class);
-//                    Intent i = new Intent();
-//                    intent.putExtra(SONG, songs[position]);
-//                    startActivity(intent);
+                    Intent intent = new Intent(MainActivity.this, showActivity.class);
+                    intent.putExtra(SONG, songsList[position].getFilename());
+                    startActivity(intent);
                 }
             });
             return new ViewHolder(view);

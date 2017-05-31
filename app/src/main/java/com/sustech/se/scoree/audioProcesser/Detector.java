@@ -28,15 +28,16 @@ public class Detector implements DetectorInterface{
         int ave = average(audioData);   //average data
         det[loop_cun % 3] = ave;
         loop_cun++;
-        if((ave > 1.1 * det[(loop_cun + 1)%3 ]) && (ave > 1.3 * det[loop_cun%3]) ){// 至少比上个信号均值强1.5倍,并且比上上个信号均值强1.8倍
-            if(counter >3){ //与上一个按键至少间隔3个采样周期
+        if((ave > 1.3 * det[(loop_cun + 1)%3 ]) && (ave > 1.6 * det[loop_cun%3]) && ave >1900){// 至少比上个信号均值强1.5倍,并且比上上个信号均值强1.8倍
+            if(counter >9){ //与上一个按键至少间隔3个采样周期
                 for (int i = 0; i < blockSize && i < ret; i++) {
                     freq_vct[i] = (double) audioData[i] / Short.MAX_VALUE;
                 }
                 fftTrans.ft(freq_vct);
+                counter = 0;
                 return freq_vct;
             }
-            counter = 0;
+
         }else counter++;
         return null;
     }

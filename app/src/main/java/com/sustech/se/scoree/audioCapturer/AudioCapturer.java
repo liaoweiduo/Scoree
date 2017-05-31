@@ -68,7 +68,7 @@ public class AudioCapturer implements AudioCapturerInterface {
             Log.e(TAG, "Error ERROR_BAD_VALUE");
             return null;
         }
-        Log.d(TAG, "OK, Captured " + ret + " bytes !");
+//        Log.d(TAG, "OK, Captured " + ret + " bytes !");
         return buffer;
     }
 
@@ -158,7 +158,7 @@ public class AudioCapturer implements AudioCapturerInterface {
                     if (mAudioFrameCapturedListener != null) {
                         mAudioFrameCapturedListener.onAudioFrameCaptured(buffer);
                     }
-                    Log.d(TAG, "OK, Captured " + ret + " bytes !");
+                    //Log.d(TAG, "OK, Captured " + ret + " bytes !");
                 }
 //                SystemClock.sleep(10);
             }

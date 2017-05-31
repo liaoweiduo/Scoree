@@ -1,5 +1,6 @@
 package com.sustech.se.scoree.UI;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -31,9 +32,11 @@ import java.io.IOException;
 
 public class showActivity extends AppCompatActivity {           //改为 Intent进来 putExtra是Song
 
+    public static final String SONG = "com.sustech.se.scoree.SONG";
     private int maxOfFrame; //界面中frame的最大容量
     private FrameLayout frame_staff[]; //存放每行乐谱图片的famelayout
     private Song staff; //乐谱
+    private String staffName;
     private View indicator; //标识匹配的竖杆
     private float scale;
     private int currentMatchingNote; //当前匹配到的音符序号
@@ -53,14 +56,16 @@ public class showActivity extends AppCompatActivity {           //改为 Intent�
     private TextView key_view;
     private Button button;
     private boolean started = false;
+    private String filePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show);
-
         gData = ((Data)getApplicationContext());
-
+        Intent intent = getIntent();
+        staffName =intent.getStringExtra(SONG);
+        Log.i("showActivity","staff:" + staffName);
         numOfLineShown = gData.getNumOfLines() + 1;
         lineNumToChange = gData.getPageTurnSetting();
         maxOfFrame = 6;
@@ -93,7 +98,7 @@ public class showActivity extends AppCompatActivity {           //改为 Intent�
                     int checkPermission=checkCallingOrSelfPermission(PERMISSION_AUDIO);
                     if(checkPermission!= PackageManager.PERMISSION_GRANTED){
                         Log.e("MainActivity","No permission for audio");
-                        requestPermissions(new String[]{PERMISSION_AUDIO}, 0);
+//                        requestPermissions(new String[]{PERMISSION_AUDIO}, 0);
                         return;
                     }
                     ac.startCapture();
@@ -133,6 +138,7 @@ public class showActivity extends AppCompatActivity {           //改为 Intent�
             }
             if(note.getPitch() != key){
                 indicator.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                //++currentMatchingNote;
             }
             else{
                 indicator.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
@@ -165,7 +171,7 @@ public class showActivity extends AppCompatActivity {           //改为 Intent�
         initialFrame_staff();
         initialStaff();
         int i=0;
-        for(i=0; i<numOfLineShown&&i<staff.getNumOfLine(); i++){
+        for(i=0; i<numOfLineShown&&i<staff.getNumOfLine()+1; i++){
             frame_staff[i].addView(staff.getImgOfStaff(i));
             staff.getImgOfStaff(i).setScaleType(ImageView.ScaleType.FIT_START);
         }
@@ -187,29 +193,22 @@ public class showActivity extends AppCompatActivity {           //改为 Intent�
         frame_staff[5] = (FrameLayout)findViewById(R.id.frame_fifth_line);
     }
 
-    private void initialStaff(){
-        try {
-            staff = FileOperator.getSongFromInputStream(getAssets().open("/songs/youandme.txt"));
+    public void initialStaff(){
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        filePath = "/" + gData.getWorkingDirectory();
+        staff = FileOperator.getSongFromInputStream(
+                getExternalFilesDir(null).getAbsolutePath() + filePath + "/" + staffName + "/" + staffName + ".txt");
         int numOfImg = staff.getNumOfLine()+1;
-        ImageView imgs[] = new ImageView[numOfImg];
+        String[] names = new String[numOfImg];
         for(int i=0; i<numOfImg; i++){
-            imgs[i] = new ImageView(this);
+            names[i] = filePath + "/" + staff.getFilename() + "/" + staff.getFilename() + "_" + i + ".png";
         }
-        /*
-        imgs[0].setImageResource(R.drawable.title_youandme);
-        imgs[1].setImageResource(R.drawable.one_youandme);
-        imgs[2].setImageResource(R.drawable.two_youandme);
-        imgs[3].setImageResource(R.drawable.three_youandme);
-        imgs[4].setImageResource(R.drawable.four_youandme);
-        imgs[5].setImageResource(R.drawable.five_youandme);
-        */
-
-        File sdfile = Environment.getExternalStorageDirectory();
-        imgs[0].setImageBitmap(FileOperator.getLocalBitmap(sdfile.getPath()+"/staff/youandme/title.png"));
+        ImageView imgs[] = new ImageView[numOfImg];
+        //imgs[0] = (ImageView)findViewById(R.id.imageView);
+        for(int i=0; i<6; i++){
+            imgs[i] = new ImageView(this);
+            imgs[i].setImageBitmap(FileOperator.getLoacalBitmap(this, getExternalFilesDir(null).getAbsolutePath() + names[i]));
+        }
 
         staff.setImgOfStaffs(imgs);
     }
@@ -218,7 +217,7 @@ public class showActivity extends AppCompatActivity {           //改为 Intent�
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(0,0);
         indicator = new View(this);
         params.height = 100;
-        params.width = 5;
+        params.width = 8;
         indicator.setLayoutParams(params);
         //indicator.setBackgroundColor(getResources().getColor(R.color.black));
         //frame_staff[1].addView(indicator);

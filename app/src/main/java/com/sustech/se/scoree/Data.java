@@ -2,30 +2,15 @@ package com.sustech.se.scoree;
 
 import android.app.Application;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.media.AudioFormat;
 import android.media.MediaRecorder;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.concurrent.Semaphore;
-
-import android.os.Environment;
 import android.util.Log;
 
 import com.sustech.se.scoree.audioCapturer.AudioCapturer;
 import com.sustech.se.scoree.audioCapturer.AudioCapturerConfig;
 import com.sustech.se.scoree.audioCapturer.AudioCapturerInterface;
 
-import static android.support.v4.app.ActivityCompat.requestPermissions;
 
 /**
  * Created by liaoweiduo on 08/04/2017.
@@ -75,10 +60,6 @@ public class Data extends Application {
         return workingDirectory;
     }
 
-    public void setWorkingDirectory(String workingDirectory) {
-        this.workingDirectory = workingDirectory;
-    }
-
     public Song[] getSongs() {
         return songs;
     }
@@ -103,13 +84,5 @@ public class Data extends Application {
         this.numOfLines = numOfLines;
         this.pageTurnSetting = pageTurnSetting;
         workingDirectory = "staff";
-        // TODO: 31/05/2017 init songs
-        Song[] ss = new Song[5];
-        ss[0] = new Song("12",1,new Note[4],3,new int[2]);
-        ss[1] = new Song("23",1,new Note[4],3,new int[2]);
-        ss[2] = new Song("34",1,new Note[4],3,new int[2]);
-        ss[3] = new Song("45",1,new Note[4],3,new int[2]);
-        ss[4] = new Song("56",1,new Note[4],3,new int[2]);
-        songs = ss;
     }
 }

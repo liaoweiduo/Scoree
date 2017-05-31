@@ -10,6 +10,7 @@ import java.io.Serializable;
 
 public class Song implements Serializable{
     private String name;
+    private String filename;
     private int numOfLine;
     private int numOfNotes;
     private Note[] notes;
@@ -17,8 +18,9 @@ public class Song implements Serializable{
     private ImageView[] imgOfStaffs;
     private int beats[];
 
-    public Song(String name, int numOfLine, Note[] notes, int pixPerLine, int beats[]){
+    public Song(String name, String filename, int numOfLine, Note[] notes, int pixPerLine, int beats[]){
         this.name = name;
+        this.filename = filename;
         this.numOfLine = numOfLine;
         this.numOfNotes = notes.length;
         this.pixPerLine = pixPerLine;
@@ -28,6 +30,10 @@ public class Song implements Serializable{
 
     public String getName(){
         return name;
+    }
+
+    public String getFilename() {
+        return filename;
     }
 
     public Note getNoteById(int id){
