@@ -38,11 +38,11 @@ public class Decoder implements DecoderInterface {
                 candidate.add(i);
             }
         }
-        max_frequency = find_max(candidate); //计算按键频率
+        max_frequency = find_max(candidate,value); //计算按键频率
         max_frequency = max_frequency*frequency/blockSize/2;
         key = log2(max_frequency);
-        kk = (int)(key+0.5); //kk 是key取整后的按键
-        //kk = delete_black_key(key);  //不考虑黑键
+        //kk = (int)(key+0.5); //kk 是key取整后的按键
+        kk = delete_black_key(key);  //不考虑黑键
         //data.setKeyValue(kk);
         return kk;
     }
@@ -72,9 +72,9 @@ public class Decoder implements DecoderInterface {
         return kk;
     }
 
-    private double find_max(ArrayList<Integer> candidate){//计算按键频率
+    private double find_max(ArrayList<Integer> candidate, double[] value){//计算按键频率
         for(int i = 0;i<candidate.size()-1;i++){
-            if(candidate.get(i)>(candidate.get(i+1)-25)){
+            if(candidate.get(i)>(candidate.get(i+1)-50)){
                 candidate.remove(i);
                 i--;
             }
@@ -83,8 +83,8 @@ public class Decoder implements DecoderInterface {
         if(candidate.size()>1){
             int max = (int)candidate.get(candidate.size()-1);
             int half = max/2;
-            for(int i = (int)(half*1.08); i>(int)(half*0.92);i--){
-                if(candidate.contains(i)){
+            for(int i = (int)(half*1.04); i>(int)(half*0.94);i--){
+                if(candidate.contains(i) && value[i]>0.85*value[max]){
                     System.out.println("Output:"+String.valueOf(i*frequency/blockSize/2)+"Hz");
                     return i;
                 }
@@ -92,7 +92,7 @@ public class Decoder implements DecoderInterface {
             if((max>500 && max <535) ||(max>480 && max<493)) {
                 int trip = max / 3;
                 for (int i = (int) (trip * 1.08); i > (int) (trip * 0.92); i--) {
-                    if (candidate.contains(i)) {
+                    if (candidate.contains(i) && value[i]>0.85*value[max]) {
                         System.out.println("Output:"+String.valueOf(i*frequency/blockSize/2)+"Hz");
                         return i;
                     }

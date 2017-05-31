@@ -7,4 +7,6 @@
     <dimen name="title_setting_width">60sp</dimen>
     <dimen name="padding_size">16dp</dimen>
     <dimen name="icon_size">30dp</dimen>
+    <dimen name="navigation_tab_bar_width">50dp</dimen>
+    <dimen name="navigation_tab_bar_height">100dp</dimen>
 </resources>

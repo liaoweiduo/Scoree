@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,15 +27,13 @@ import com.sustech.se.scoree.audioProcesser.DecoderInterface;
 import com.sustech.se.scoree.audioProcesser.Detector;
 import com.sustech.se.scoree.audioProcesser.DetectorInterface;
 
-import java.io.File;
-import java.io.IOException;
-
 
 public class showActivity extends AppCompatActivity {           //改为 Intent进来 putExtra是Song
 
     public static final String SONG = "com.sustech.se.scoree.SONG";
     private int maxOfFrame; //界面中frame的最大容量
     private FrameLayout frame_staff[]; //存放每行乐谱图片的famelayout
+    private TextView currentNote;
     private Song staff; //乐谱
     private String staffName;
     private View indicator; //标识匹配的竖杆
@@ -53,10 +52,12 @@ public class showActivity extends AppCompatActivity {           //改为 Intent�
     private DetectorInterface detector;
     private DecoderInterface decoder;
     AudioAsyncTask audio = null;
-    private TextView key_view;
     private Button button;
     private boolean started = false;
     private String filePath;
+    //private int grade;
+    private boolean flag = true;
+    private int grade[];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,11 +78,16 @@ public class showActivity extends AppCompatActivity {           //改为 Intent�
 
         initialFrame_staff(numOfLineShown);
         initialIndicator();
+        grade = new int[staff.getNumOfNotes()];
+        for(int temp: grade){
+            temp = 0;
+        }
+
+        currentNote = (TextView)findViewById(R.id.editText_currentNote);
 
         detector = new Detector(gData.getAudioCapturerConfig().getBUFFER_SIZE());
         decoder= new Decoder(gData.getAudioCapturerConfig().getBUFFER_SIZE(), gData.getAudioCapturerConfig().getSAMPLE_RATE());
 
-        key_view=(TextView) findViewById(R.id.key);
         ac=gData.getAudioCapturer();
 
         button = (Button) findViewById(R.id.audioButton);
@@ -107,11 +113,21 @@ public class showActivity extends AppCompatActivity {           //改为 Intent�
 
                     button.setText(R.string.stop);
                     started = true;
+                    TextView setGrade = (TextView)findViewById(R.id.textView_grade);
+                    setGrade.setText(String.valueOf(calGrade() * 100 / grade.length));
                 }
             }
         });
     }
 
+    public int calGrade(){
+        int countTrue = 0;
+        for(int temp: grade){
+            if(temp == 1)
+                countTrue++;
+        }
+        return countTrue;
+    }
     //匹配识别到的琴键
     private void match(int key){
 
@@ -129,6 +145,7 @@ public class showActivity extends AppCompatActivity {           //改为 Intent�
                 int index;
                 if(currentLine>=numOfLineShown){
                     index = currentLine%numOfLineShown+1;
+
                 }
                 else{
                     index = currentLine;
@@ -136,19 +153,25 @@ public class showActivity extends AppCompatActivity {           //改为 Intent�
                 frame_staff[index].addView(indicator);
                 //pastLine = currentLine;
             }
+            currentNote.setText(String.valueOf(note.getPitch()));
             if(note.getPitch() != key){
                 indicator.setBackgroundColor(getResources().getColor(R.color.colorAccent));
                 //++currentMatchingNote;
+                currentNote.setText(mapNote(note.getPitch()));
+                flag = false;
             }
             else{
                 indicator.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 ++currentMatchingNote;
+                if(!flag)
+                    grade[currentMatchingNote] = 1;
+                flag = true;
             }
             indicator.setX(note.getPosition()*scale);
             indicator.setY(indicatorY*scale);
         }
         else{
-            Toast.makeText(this, "Matching done", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Matching done", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -254,5 +277,31 @@ public class showActivity extends AppCompatActivity {           //改为 Intent�
         protected void onCancelled() {
             Log.i("mainActivity", "onCancelled() called");
         }
+    }
+
+    public String mapNote(int num){
+
+        String map = null;
+        switch(num%12){
+            case 1: map = "A";break;
+            case 2: map = "A#";break;
+            case 3: map = "B"; break;
+            case 4: map = "C"; break;
+            case 5: map = "C#"; break;
+            case 6: map = "D"; break;
+            case 7: map = "D#"; break;
+            case 8: map = "E"; break;
+            case 9: map = "F"; break;
+            case 10: map = "F#"; break;
+            case 11: map = "G"; break;
+            case 0: map = "G#"; break;
+        }
+        if(map.equals("A")||map.equals("A#")||map.equals("B")){
+            map += Integer.toString(num/12);
+        }
+        else{
+            map += Integer.toString(num/12+1);
+        }
+        return map;
     }
 }

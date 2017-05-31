@@ -9,27 +9,27 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="#8d88e4">
+        android:orientation="vertical">
 
         <devlight.io.library.ntb.NavigationTabBar
             android:id="@+id/ntb_vertical"
-            android:layout_width="50dp"
-            android:layout_height="100dp"
+            android:layout_width="100dp"
+            android:layout_height="200dp"
             android:layout_gravity="center"
+            android:gravity="center"
             app:ntb_animation_duration="400"
             app:ntb_preview_colors="@array/red_wine"
-            app:ntb_corners_radius="25dp"
+            app:ntb_corners_radius="50dp"
             app:ntb_scaled="false"
             app:ntb_active_color="#8d88e4"
             app:ntb_inactive_color="#dddfec"
             app:ntb_bg_color="#8d88e4"/>
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="10dp"
+        android:layout_height="match_parent"
+        android:background="#BDBDBD" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/vp_vertical_ntb"

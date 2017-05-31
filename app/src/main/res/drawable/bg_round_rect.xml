@@ -4,6 +4,8 @@
        android:shape="rectangle">
 
     <corners android:radius="4dp"/>
-    <solid android:color="#4b405c"/>
+    <solid android:color="#ffffff" />
+    <stroke android:width="1dip"
+        android:color="#4fa5d5"/>
 
 </shape>
